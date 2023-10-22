@@ -1,0 +1,38 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>io.github.garmin.monkey.monkey-c</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>Monkey C (Garmin Connect IQ)</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="madisliias@gmail.com" url="https://liias.github.io">Madis Liias</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+    <p>Unofficial support for <a href="https://developer.garmin.com/connect-iq/programmers-guide/monkey-c/">Monkey C language</a>
+       and <a href="https://developer.garmin.com/connect-iq/overview/">Garmin Connect IQ SDK</a>.
+      </p>
+  ]]></description>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+
+    </extensions>
+    <actions>
+        <action id="io.github.garmin.monkeyc.ide.actions.CreateMonkeyFileAction"
+                class="io.github.garmin.monkeyc.ide.actions.CreateMonkeyFileAction" text="Monkey C File"
+                description="Create new monkey C file">
+            <add-to-group group-id="NewGroup" relative-to-action="NewFromTemplate" anchor="before"/>
+        </action>
+    </actions>
+</idea-plugin>
