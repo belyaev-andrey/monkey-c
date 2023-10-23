@@ -1,6 +1,6 @@
 package io.github.garmin.monkeyc.ide.project.module
 
-enum class AppType(val appType: String) {
+enum class AppType(val typeId: String) {
 
     WATCH_APP("watch-app"),
     WIDGET("widget"),
