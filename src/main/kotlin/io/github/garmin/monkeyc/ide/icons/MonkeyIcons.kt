@@ -1,4 +1,4 @@
-package icons
+package io.github.garmin.monkeyc.ide.icons
 
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.util.IconLoader

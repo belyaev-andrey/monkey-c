@@ -4,7 +4,7 @@ import com.intellij.ide.actions.CreateFileFromTemplateAction
 import com.intellij.ide.actions.CreateFileFromTemplateDialog
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
-import icons.MonkeyIcons
+import io.github.garmin.monkeyc.ide.icons.MonkeyIcons
 import io.github.garmin.monkeyc.ide.i18n.MsgBundle
 
 class CreateMonkeyFileAction: CreateFileFromTemplateAction(MsgBundle.message("monkey.c.file"),

@@ -1,8 +1,11 @@
 package io.github.garmin.monkeyc.ide.project.module
 
+import com.intellij.ide.util.projectWizard.ModuleWizardStep
+import com.intellij.ide.util.projectWizard.WizardContext
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.module.ModuleTypeManager
-import icons.MonkeyIcons
+import com.intellij.openapi.roots.ui.configuration.ModulesProvider
+import io.github.garmin.monkeyc.ide.icons.MonkeyIcons
 import io.github.garmin.monkeyc.ide.i18n.MsgBundle
 import javax.swing.Icon
 
@@ -10,8 +13,8 @@ import javax.swing.Icon
 class MonkeyModuleType : ModuleType<MonkeyModuleBuilder>(MonkeyConstants.MODULE_TYPE_ID) {
 
     companion object {
-        fun getInstance() : MonkeyModuleType {
-            return ModuleTypeManager.getInstance().findByID(MonkeyConstants.MODULE_TYPE_ID) as MonkeyModuleType
+        val INSTANCE: MonkeyModuleType by lazy {
+            ModuleTypeManager.getInstance().findByID(MonkeyConstants.MODULE_TYPE_ID) as MonkeyModuleType
         }
     }
 
@@ -29,5 +32,14 @@ class MonkeyModuleType : ModuleType<MonkeyModuleBuilder>(MonkeyConstants.MODULE_
 
     override fun getNodeIcon(isOpened: Boolean): Icon {
         return MonkeyIcons.MODULE16
+    }
+
+    override fun createWizardSteps(
+        wizardContext: WizardContext,
+        moduleBuilder: MonkeyModuleBuilder,
+        modulesProvider: ModulesProvider
+    ): Array<ModuleWizardStep> {
+
+        return super.createWizardSteps(wizardContext, moduleBuilder, modulesProvider)
     }
 }

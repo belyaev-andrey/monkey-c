@@ -5,13 +5,14 @@ import com.intellij.ide.util.projectWizard.WizardContext
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.platform.ProjectTemplate
 import com.intellij.platform.ProjectTemplatesFactory
-import icons.MonkeyIcons
+import io.github.garmin.monkeyc.ide.icons.MonkeyIcons
 import io.github.garmin.monkeyc.ide.i18n.MsgBundle
 import io.github.garmin.monkeyc.ide.project.module.AppType
 import io.github.garmin.monkeyc.ide.project.module.MonkeyModuleBuilder
 import javax.swing.Icon
 
 class MonkeyProjectTemplatesFactory: ProjectTemplatesFactory() {
+
     override fun getGroups(): Array<String> {
         return arrayOf(MsgBundle.message("connect.iq"))
     }

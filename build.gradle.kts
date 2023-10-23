@@ -1,3 +1,4 @@
+
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.0"
@@ -6,6 +7,8 @@ plugins {
 
 group = "io.github.garmin.monkey"
 version = "1.0-SNAPSHOT"
+
+val downloadIdeaSources = getProperty("downloadIdeaSources").toBoolean()
 
 repositories {
     mavenCentral()
@@ -16,18 +19,19 @@ repositories {
 intellij {
     version.set("2022.2.5")
     type.set("IC") // Target IDE Platform
-
+    downloadSources = downloadIdeaSources
     plugins.set(listOf(/* Plugin Dependencies */))
 }
+
 
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+        sourceCompatibility = JavaVersion.VERSION_17.majorVersion
+        targetCompatibility = JavaVersion.VERSION_17.majorVersion
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.majorVersion
     }
 
     patchPluginXml {
@@ -45,3 +49,7 @@ tasks {
         token.set(System.getenv("PUBLISH_TOKEN"))
     }
 }
+
+fun getProperty(name: String): String =
+    extra.properties[name] as? String
+        ?: error("Property `$name` is not defined in gradle.properties")
