@@ -1,12 +1,13 @@
-package io.github.garmin.monkeyc.lang
+package io.github.garmin.monkeyc.lang.file
 
 import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.vfs.VirtualFile
 import io.github.garmin.monkeyc.ide.i18n.MsgBundle
 import io.github.garmin.monkeyc.ide.icons.MonkeyIcons
+import io.github.garmin.monkeyc.lang.MonkeyCLanguage
 import javax.swing.Icon
 
-class MonkeyFileType : LanguageFileType(MonkeyCLanguage) {
+object MonkeyFileType : LanguageFileType(MonkeyCLanguage) {
 
     override fun getName(): String = MsgBundle.message("monkey.c")
 

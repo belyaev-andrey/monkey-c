@@ -35,7 +35,16 @@
         <internalFileTemplate name="Monkey C File"/>
 
         <!-- Monkey C language -->
-        <fileType name="Monkey C" implementationClass="io.github.garmin.monkeyc.lang.MonkeyFileType" language="MonkeyC" extensions="mc"/>
+        <fileType name="Monkey C"
+                  implementationClass="io.github.garmin.monkeyc.lang.file.MonkeyFileType"
+                  language="MonkeyC"
+                  extensions="mc"
+                  fieldName="INSTANCE"
+        />
+
+        <lang.parserDefinition language="MonkeyC"
+                               implementationClass="io.github.garmin.monkeyc.lang.parser.MonkeyParserDefinition"/>
+
 
     </extensions>
     <actions>

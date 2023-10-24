@@ -166,22 +166,22 @@ usingDeclaration ::= USING fullyQualifiedReferenceExpression (AS componentName)?
 // TODO: can a module have static/hidden modifiers?
 moduleDeclaration ::= modifiers MODULE componentName moduleBody {
 pin=2
-mixin="io.github.liias.monkey.lang.psi.impl.AbstractMonkeyComponentImpl"
-implements="io.github.liias.monkey.lang.psi.MonkeyComponent"
+mixin="io.github.garmin.monkeyc.lang.psi.impl.AbstractMonkeyComponentImpl"
+implements="io.github.garmin.monkeyc.lang.psi.MonkeyComponent"
 }
 
 moduleBody ::= LBRACE moduleBodyMembers RBRACE {pin=1}
-moduleBodyMembers ::= moduleBodyMember* {implements="io.github.liias.monkey.lang.psi.MonkeyExecutionScope"}
+moduleBodyMembers ::= moduleBodyMember* {implements="io.github.garmin.monkeyc.lang.psi.MonkeyExecutionScope"}
 private moduleBodyMember ::= constDeclaration | fieldDeclarationList | functionDeclaration | classDeclaration | enumDeclaration | moduleDeclaration
 
 private fullyQualifiedReferenceExpression ::= referenceOrThisExpression qualifiedReferenceExpression*
 
 // class
 classDeclaration ::= modifiers CLASS componentName (EXTENDS fullyQualifiedReferenceExpression)? classBody
-{pin=2 mixin="io.github.liias.monkey.lang.psi.impl.AbstractMonkeyPsiClass" implements="io.github.liias.monkey.lang.psi.MonkeyClass"}
+{pin=2 mixin="io.github.garmin.monkeyc.lang.psi.impl.AbstractMonkeyPsiClass" implements="io.github.garmin.monkeyc.lang.psi.MonkeyClass"}
 
 classBody ::= LBRACE classBodyMembers RBRACE {pin=1}
-classBodyMembers ::= classBodyMember* {implements="io.github.liias.monkey.lang.psi.MonkeyExecutionScope"}
+classBodyMembers ::= classBodyMember* {implements="io.github.garmin.monkeyc.lang.psi.MonkeyExecutionScope"}
 
 private classBodyMember ::= constDeclaration | fieldDeclarationList | functionDeclaration | classDeclaration | enumDeclaration
 
@@ -192,15 +192,15 @@ private maybeSignedInteger ::= (PLUS|SUB)? INTLITERAL
 
 enumConstant ::= componentName (EQ maybeSignedInteger)? {
 pin=1
-mixin="io.github.liias.monkey.lang.psi.impl.AbstractMonkeyComponentImpl"
-implements="io.github.liias.monkey.lang.psi.MonkeyComponent"
+mixin="io.github.garmin.monkeyc.lang.psi.impl.AbstractMonkeyComponentImpl"
+implements="io.github.garmin.monkeyc.lang.psi.MonkeyComponent"
 }
 
 // Constants must be declared at the module or class level; they cannot be declared within a function.
 constDeclaration ::= modifiers CONST componentName (EQ expression)? SEMI {
 pin=2
-mixin="io.github.liias.monkey.lang.psi.impl.AbstractMonkeyComponentImpl"
-implements="io.github.liias.monkey.lang.psi.MonkeyComponent"
+mixin="io.github.garmin.monkeyc.lang.psi.impl.AbstractMonkeyComponentImpl"
+implements="io.github.garmin.monkeyc.lang.psi.MonkeyComponent"
 }
 
 // field
@@ -211,8 +211,8 @@ fieldDeclaration ::= varOrFieldDeclaration
 functionDeclaration ::= modifiers FUNCTION componentName
  LPAREN formalParameterDeclarations? RPAREN block {
 pin=3
-mixin="io.github.liias.monkey.lang.psi.impl.AbstractMonkeyComponentImpl"
-implements="io.github.liias.monkey.lang.psi.MonkeyComponent"
+mixin="io.github.garmin.monkeyc.lang.psi.impl.AbstractMonkeyComponentImpl"
+implements="io.github.garmin.monkeyc.lang.psi.MonkeyComponent"
 }
 
 formalParameterDeclarations ::= componentName (COMMA componentName)*
@@ -227,8 +227,8 @@ variableDeclaration ::= varOrFieldDeclaration
 
 private varOrFieldDeclaration ::= componentName (LBRACKET RBRACKET)* (EQ variableInitializer)? {
 pin=1
-mixin="io.github.liias.monkey.lang.psi.impl.AbstractMonkeyComponentImpl"
-implements="io.github.liias.monkey.lang.psi.MonkeyComponent"
+mixin="io.github.garmin.monkeyc.lang.psi.impl.AbstractMonkeyComponentImpl"
+implements="io.github.garmin.monkeyc.lang.psi.MonkeyComponent"
 }
 
 variableInitializer ::= arrayInitializer | expression
@@ -275,13 +275,13 @@ expressionList ::= expression (COMMA expression)*
 parExpression ::= LPAREN expression RPAREN
 
 thisExpression ::= THIS | SELF {
-mixin="io.github.liias.monkey.lang.psi.impl.MonkeyReferenceImpl"
-implements="io.github.liias.monkey.lang.psi.MonkeyReference"
+mixin="io.github.garmin.monkeyc.lang.psi.impl.MonkeyReferenceImpl"
+implements="io.github.garmin.monkeyc.lang.psi.MonkeyReference"
 }
 
 blingExpression ::= BLING {
-mixin="io.github.liias.monkey.lang.psi.impl.MonkeyReferenceImpl"
-implements="io.github.liias.monkey.lang.psi.MonkeyReference"
+mixin="io.github.garmin.monkeyc.lang.psi.impl.MonkeyReferenceImpl"
+implements="io.github.garmin.monkeyc.lang.psi.MonkeyReference"
 }
 
 private referenceOrThisExpression ::= referenceExpression
@@ -362,8 +362,8 @@ private primary ::= parExpression
 qualifiedReferenceExpression ::= DOT referenceExpression {elementType="referenceExpression"}
 
 referenceExpression ::= id {
-  mixin="io.github.liias.monkey.lang.psi.impl.MonkeyReferenceImpl"
-  implements="io.github.liias.monkey.lang.psi.MonkeyReference"
+  mixin="io.github.garmin.monkeyc.lang.psi.impl.MonkeyReferenceImpl"
+  implements="io.github.garmin.monkeyc.lang.psi.MonkeyReference"
 }
 
 identifierSuffix ::= (LBRACKET expression RBRACKET)+
@@ -408,7 +408,7 @@ symbol ::= COLON referenceExpression {pin=1}
 qualifiedName ::= componentName (DOT componentName)*
 
 componentName ::= id
-{mixin="io.github.liias.monkey.lang.psi.impl.MonkeyNamedElementImpl" implements="io.github.liias.monkey.lang.psi.MonkeyNamedElement"}
+{mixin="io.github.garmin.monkeyc.lang.psi.impl.MonkeyNamedElementImpl" implements="io.github.garmin.monkeyc.lang.psi.MonkeyNamedElement"}
 
 // see strictID
 id ::= IDENTIFIER
