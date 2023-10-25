@@ -34,6 +34,12 @@ public class MonkeyVariableInitializerImpl extends MonkeyPsiCompositeElementImpl
 
   @Override
   @Nullable
+  public MonkeyAsTypeClause getAsTypeClause() {
+    return findChildByClass(MonkeyAsTypeClause.class);
+  }
+
+  @Override
+  @Nullable
   public MonkeyExpression getExpression() {
     return findChildByClass(MonkeyExpression.class);
   }

@@ -30,6 +30,10 @@ public class MonkeyVisitor extends PsiElementVisitor {
     visitPsiCompositeElement(o);
   }
 
+  public void visitAsTypeClause(@NotNull MonkeyAsTypeClause o) {
+    visitPsiCompositeElement(o);
+  }
+
   public void visitAssignmentOperator(@NotNull MonkeyAssignmentOperator o) {
     visitPsiCompositeElement(o);
   }
@@ -270,6 +274,10 @@ public class MonkeyVisitor extends PsiElementVisitor {
   }
 
   public void visitTryStatement(@NotNull MonkeyTryStatement o) {
+    visitPsiCompositeElement(o);
+  }
+
+  public void visitTypeDefinition(@NotNull MonkeyTypeDefinition o) {
     visitPsiCompositeElement(o);
   }
 

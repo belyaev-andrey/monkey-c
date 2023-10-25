@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface MonkeyExpression extends MonkeyPsiCompositeElement {
 
   @Nullable
+  MonkeyAsTypeClause getAsTypeClause();
+
+  @Nullable
   MonkeyAssignmentOperator getAssignmentOperator();
 
   @NotNull

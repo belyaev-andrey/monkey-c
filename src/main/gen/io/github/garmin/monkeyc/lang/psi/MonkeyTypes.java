@@ -15,6 +15,7 @@ public interface MonkeyTypes {
   IElementType ARRAY_CREATOR = new MonkeyElementType("ARRAY_CREATOR");
   IElementType ARRAY_INITIALIZER = new MonkeyElementType("ARRAY_INITIALIZER");
   IElementType ASSIGNMENT_OPERATOR = new MonkeyElementType("ASSIGNMENT_OPERATOR");
+  IElementType AS_TYPE_CLAUSE = new MonkeyElementType("AS_TYPE_CLAUSE");
   IElementType BITWISE_EXPRESSION = new MonkeyElementType("BITWISE_EXPRESSION");
   IElementType BITWISE_OPERATOR = new MonkeyElementType("BITWISE_OPERATOR");
   IElementType BLING_EXPRESSION = new MonkeyElementType("BLING_EXPRESSION");
@@ -74,6 +75,7 @@ public interface MonkeyTypes {
   IElementType SYMBOL = new MonkeyElementType("SYMBOL");
   IElementType THIS_EXPRESSION = new MonkeyElementType("THIS_EXPRESSION");
   IElementType TRY_STATEMENT = new MonkeyElementType("TRY_STATEMENT");
+  IElementType TYPE_DEFINITION = new MonkeyElementType("TYPE_DEFINITION");
   IElementType UNARY_EXPRESSION = new MonkeyElementType("UNARY_EXPRESSION");
   IElementType USING_DECLARATION = new MonkeyElementType("USING_DECLARATION");
   IElementType VARIABLE_DECLARATION = new MonkeyElementType("VARIABLE_DECLARATION");
@@ -171,6 +173,7 @@ public interface MonkeyTypes {
   IElementType TILDE = new MonkeyTokenType("~");
   IElementType TRUE = new MonkeyTokenType("true");
   IElementType TRY = new MonkeyTokenType("try");
+  IElementType TYPEDEF = new MonkeyTokenType("typedef");
   IElementType USING = new MonkeyTokenType("using");
   IElementType VAR = new MonkeyTokenType("var");
   IElementType VOID = new MonkeyTokenType("VOID");
@@ -199,6 +202,9 @@ public interface MonkeyTypes {
       }
       else if (type == ASSIGNMENT_OPERATOR) {
         return new MonkeyAssignmentOperatorImpl(node);
+      }
+      else if (type == AS_TYPE_CLAUSE) {
+        return new MonkeyAsTypeClauseImpl(node);
       }
       else if (type == BITWISE_EXPRESSION) {
         return new MonkeyBitwiseExpressionImpl(node);
@@ -376,6 +382,9 @@ public interface MonkeyTypes {
       }
       else if (type == TRY_STATEMENT) {
         return new MonkeyTryStatementImpl(node);
+      }
+      else if (type == TYPE_DEFINITION) {
+        return new MonkeyTypeDefinitionImpl(node);
       }
       else if (type == UNARY_EXPRESSION) {
         return new MonkeyUnaryExpressionImpl(node);

@@ -27,6 +27,12 @@ public class MonkeyFieldDeclarationImpl extends MonkeyPsiCompositeElementImpl im
   }
 
   @Override
+  @Nullable
+  public MonkeyAsTypeClause getAsTypeClause() {
+    return findChildByClass(MonkeyAsTypeClause.class);
+  }
+
+  @Override
   @NotNull
   public MonkeyComponentName getComponentName() {
     return findNotNullChildByClass(MonkeyComponentName.class);

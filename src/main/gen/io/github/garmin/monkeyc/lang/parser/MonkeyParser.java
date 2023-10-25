@@ -344,6 +344,42 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // AS typeReference (OR typeReference)*
+  public static boolean asTypeClause(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "asTypeClause")) return false;
+    if (!nextTokenIs(b, AS)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, AS);
+    r = r && typeReference(b, l + 1);
+    r = r && asTypeClause_2(b, l + 1);
+    exit_section_(b, m, AS_TYPE_CLAUSE, r);
+    return r;
+  }
+
+  // (OR typeReference)*
+  private static boolean asTypeClause_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "asTypeClause_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!asTypeClause_2_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "asTypeClause_2", c)) break;
+    }
+    return true;
+  }
+
+  // OR typeReference
+  private static boolean asTypeClause_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "asTypeClause_2_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, OR);
+    r = r && typeReference(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // EQ
   //                      | PLUSEQ
   //                      | SUBEQ
@@ -648,6 +684,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   //                           | fieldDeclarationList
   //                           | functionDeclaration
   //                           | blockStatement
+  //                           | typeDefinition
   static boolean compilationUnit(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "compilationUnit")) return false;
     boolean r;
@@ -659,6 +696,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     if (!r) r = fieldDeclarationList(b, l + 1);
     if (!r) r = functionDeclaration(b, l + 1);
     if (!r) r = blockStatement(b, l + 1);
+    if (!r) r = typeDefinition(b, l + 1);
     exit_section_(b, l, m, r, false, compilationUnit_auto_recover_);
     return r;
   }
@@ -1052,13 +1090,14 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // conditionalExpression (assignmentOperator expression)?
+  // conditionalExpression (assignmentOperator expression)? asTypeClause?
   public static boolean expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "expression")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _COLLAPSE_, EXPRESSION, "<expression>");
     r = conditionalExpression(b, l + 1);
     r = r && expression_1(b, l + 1);
+    r = r && expression_2(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -1079,6 +1118,13 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     r = r && expression(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
+  }
+
+  // asTypeClause?
+  private static boolean expression_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expression_2")) return false;
+    asTypeClause(b, l + 1);
+    return true;
   }
 
   /* ********************************************************** */
@@ -1218,7 +1264,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // componentName (COMMA componentName)*
+  // componentName asTypeClause? (COMMA componentName asTypeClause?)*
   public static boolean formalParameterDeclarations(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "formalParameterDeclarations")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
@@ -1226,30 +1272,46 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b);
     r = componentName(b, l + 1);
     r = r && formalParameterDeclarations_1(b, l + 1);
+    r = r && formalParameterDeclarations_2(b, l + 1);
     exit_section_(b, m, FORMAL_PARAMETER_DECLARATIONS, r);
     return r;
   }
 
-  // (COMMA componentName)*
+  // asTypeClause?
   private static boolean formalParameterDeclarations_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "formalParameterDeclarations_1")) return false;
+    asTypeClause(b, l + 1);
+    return true;
+  }
+
+  // (COMMA componentName asTypeClause?)*
+  private static boolean formalParameterDeclarations_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "formalParameterDeclarations_2")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!formalParameterDeclarations_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "formalParameterDeclarations_1", c)) break;
+      if (!formalParameterDeclarations_2_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "formalParameterDeclarations_2", c)) break;
     }
     return true;
   }
 
-  // COMMA componentName
-  private static boolean formalParameterDeclarations_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "formalParameterDeclarations_1_0")) return false;
+  // COMMA componentName asTypeClause?
+  private static boolean formalParameterDeclarations_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "formalParameterDeclarations_2_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
     r = r && componentName(b, l + 1);
+    r = r && formalParameterDeclarations_2_0_2(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
+  }
+
+  // asTypeClause?
+  private static boolean formalParameterDeclarations_2_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "formalParameterDeclarations_2_0_2")) return false;
+    asTypeClause(b, l + 1);
+    return true;
   }
 
   /* ********************************************************** */
@@ -1277,7 +1339,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // modifiers FUNCTION componentName
-  //  LPAREN formalParameterDeclarations? RPAREN block
+  //  LPAREN formalParameterDeclarations? RPAREN asTypeClause? block
   public static boolean functionDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "functionDeclaration")) return false;
     boolean r, p;
@@ -1289,6 +1351,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     r = r && report_error_(b, consumeToken(b, LPAREN));
     r = p && report_error_(b, functionDeclaration_4(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, RPAREN)) && r;
+    r = p && report_error_(b, functionDeclaration_6(b, l + 1)) && r;
     r = p && block(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
@@ -1298,6 +1361,13 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   private static boolean functionDeclaration_4(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "functionDeclaration_4")) return false;
     formalParameterDeclarations(b, l + 1);
+    return true;
+  }
+
+  // asTypeClause?
+  private static boolean functionDeclaration_6(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "functionDeclaration_6")) return false;
+    asTypeClause(b, l + 1);
     return true;
   }
 
@@ -2388,6 +2458,49 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // TYPEDEF componentName asTypeClause? SEMI
+  public static boolean typeDefinition(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeDefinition")) return false;
+    if (!nextTokenIs(b, TYPEDEF)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, TYPE_DEFINITION, null);
+    r = consumeToken(b, TYPEDEF);
+    r = r && componentName(b, l + 1);
+    p = r; // pin = 2
+    r = r && report_error_(b, typeDefinition_2(b, l + 1));
+    r = p && consumeToken(b, SEMI) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // asTypeClause?
+  private static boolean typeDefinition_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeDefinition_2")) return false;
+    asTypeClause(b, l + 1);
+    return true;
+  }
+
+  /* ********************************************************** */
+  // qualifiedName QUES?
+  static boolean typeReference(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeReference")) return false;
+    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = qualifiedName(b, l + 1);
+    r = r && typeReference_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // QUES?
+  private static boolean typeReference_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeReference_1")) return false;
+    consumeToken(b, QUES);
+    return true;
+  }
+
+  /* ********************************************************** */
   // PLUS unaryExpression
   //                   | SUB unaryExpression
   //                   | PLUSPLUS unaryExpression
@@ -2561,7 +2674,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // componentName (LBRACKET RBRACKET)* (EQ variableInitializer)?
+  // componentName (LBRACKET RBRACKET)* asTypeClause? (EQ variableInitializer)?
   static boolean varOrFieldDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "varOrFieldDeclaration")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
@@ -2570,7 +2683,8 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     r = componentName(b, l + 1);
     p = r; // pin = 1
     r = r && report_error_(b, varOrFieldDeclaration_1(b, l + 1));
-    r = p && varOrFieldDeclaration_2(b, l + 1) && r;
+    r = p && report_error_(b, varOrFieldDeclaration_2(b, l + 1)) && r;
+    r = p && varOrFieldDeclaration_3(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -2596,16 +2710,23 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (EQ variableInitializer)?
+  // asTypeClause?
   private static boolean varOrFieldDeclaration_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "varOrFieldDeclaration_2")) return false;
-    varOrFieldDeclaration_2_0(b, l + 1);
+    asTypeClause(b, l + 1);
+    return true;
+  }
+
+  // (EQ variableInitializer)?
+  private static boolean varOrFieldDeclaration_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "varOrFieldDeclaration_3")) return false;
+    varOrFieldDeclaration_3_0(b, l + 1);
     return true;
   }
 
   // EQ variableInitializer
-  private static boolean varOrFieldDeclaration_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "varOrFieldDeclaration_2_0")) return false;
+  private static boolean varOrFieldDeclaration_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "varOrFieldDeclaration_3_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, EQ);
@@ -2663,15 +2784,31 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // arrayInitializer | expression
+  // (arrayInitializer | expression) asTypeClause?
   public static boolean variableInitializer(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "variableInitializer")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, VARIABLE_INITIALIZER, "<variable initializer>");
-    r = arrayInitializer(b, l + 1);
-    if (!r) r = expression(b, l + 1);
+    r = variableInitializer_0(b, l + 1);
+    r = r && variableInitializer_1(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
+  }
+
+  // arrayInitializer | expression
+  private static boolean variableInitializer_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "variableInitializer_0")) return false;
+    boolean r;
+    r = arrayInitializer(b, l + 1);
+    if (!r) r = expression(b, l + 1);
+    return r;
+  }
+
+  // asTypeClause?
+  private static boolean variableInitializer_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "variableInitializer_1")) return false;
+    asTypeClause(b, l + 1);
+    return true;
   }
 
   static final Parser compilationUnit_auto_recover_ = (b, l) -> !nextTokenIsFast(b, BANG, BLING,
@@ -2681,5 +2818,5 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     LBRACE, LBRACKET, LONGLITERAL, LPAREN, MODULE, NEW,
     NULL, PLUS, PLUSPLUS, RETURN, SELF, SEMI,
     STATIC, SUB, SUBSUB, SWITCH, THIS, THROW,
-    TILDE, TRUE, TRY, VAR, VOID, WHILE, STRING);
+    TILDE, TRUE, TRY, TYPEDEF, VAR, VOID, WHILE, STRING);
 }

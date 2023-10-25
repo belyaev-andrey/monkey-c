@@ -28,6 +28,12 @@ public class MonkeyExpressionImpl extends MonkeyPsiCompositeElementImpl implemen
 
   @Override
   @Nullable
+  public MonkeyAsTypeClause getAsTypeClause() {
+    return findChildByClass(MonkeyAsTypeClause.class);
+  }
+
+  @Override
+  @Nullable
   public MonkeyAssignmentOperator getAssignmentOperator() {
     return findChildByClass(MonkeyAssignmentOperator.class);
   }

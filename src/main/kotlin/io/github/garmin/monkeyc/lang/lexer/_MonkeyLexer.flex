@@ -55,6 +55,7 @@ CHARLITERAL='[^']*'
   "module"                        { return MODULE; }
   "using"                         { return USING; }
   "import"                        { return IMPORT; }
+  "typedef"                       { return TYPEDEF; }
   "as"                            { return AS; }
   "enum"                          { return ENUM; }
   "extends"                       { return EXTENDS; }

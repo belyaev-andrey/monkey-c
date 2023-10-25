@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface MonkeyFunctionDeclaration extends MonkeyComponent {
 
   @Nullable
+  MonkeyAsTypeClause getAsTypeClause();
+
+  @Nullable
   MonkeyBlock getBlock();
 
   @NotNull

@@ -28,6 +28,12 @@ public class MonkeyFunctionDeclarationImpl extends AbstractMonkeyComponentImpl i
 
   @Override
   @Nullable
+  public MonkeyAsTypeClause getAsTypeClause() {
+    return findChildByClass(MonkeyAsTypeClause.class);
+  }
+
+  @Override
+  @Nullable
   public MonkeyBlock getBlock() {
     return findChildByClass(MonkeyBlock.class);
   }

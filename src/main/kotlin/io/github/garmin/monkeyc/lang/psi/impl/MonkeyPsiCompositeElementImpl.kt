@@ -81,6 +81,15 @@ open class MonkeyPsiCompositeElementImpl(node: ASTNode) : ASTWrapperPsiElement(n
                         }
                     }
 
+                    is MonkeyAsTypeClause -> {
+                        //TODO
+                    }
+
+                    is MonkeyTypeDefinition -> {
+                        result.add(child.componentName)
+                    }
+
+
                     is MonkeyFieldDeclarationList -> {
                         for (fieldDeclaration in child.getFieldDeclarationList()) {
                             result.add(fieldDeclaration.getComponentName())

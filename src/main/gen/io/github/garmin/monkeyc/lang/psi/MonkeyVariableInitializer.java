@@ -11,6 +11,9 @@ public interface MonkeyVariableInitializer extends MonkeyPsiCompositeElement {
   MonkeyArrayInitializer getArrayInitializer();
 
   @Nullable
+  MonkeyAsTypeClause getAsTypeClause();
+
+  @Nullable
   MonkeyExpression getExpression();
 
 }

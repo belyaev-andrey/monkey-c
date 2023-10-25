@@ -7,6 +7,9 @@ import com.intellij.psi.PsiElement;
 
 public interface MonkeyFieldDeclaration extends MonkeyPsiCompositeElement {
 
+  @Nullable
+  MonkeyAsTypeClause getAsTypeClause();
+
   @NotNull
   MonkeyComponentName getComponentName();
 

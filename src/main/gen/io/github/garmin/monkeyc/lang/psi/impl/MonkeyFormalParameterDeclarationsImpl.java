@@ -28,6 +28,12 @@ public class MonkeyFormalParameterDeclarationsImpl extends MonkeyPsiCompositeEle
 
   @Override
   @NotNull
+  public List<MonkeyAsTypeClause> getAsTypeClauseList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, MonkeyAsTypeClause.class);
+  }
+
+  @Override
+  @NotNull
   public List<MonkeyComponentName> getComponentNameList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, MonkeyComponentName.class);
   }

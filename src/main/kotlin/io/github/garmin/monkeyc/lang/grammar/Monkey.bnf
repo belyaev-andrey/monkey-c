@@ -30,6 +30,7 @@
     MODULE = "module"
     USING = "using"
     IMPORT = "import"
+    TYPEDEF = "typedef"
     AS = "as"
     ENUM = "enum"
     EXTENDS = "extends"
@@ -152,6 +153,7 @@ private compilationUnit ::= moduleDeclaration
                           | fieldDeclarationList
                           | functionDeclaration
                           | blockStatement
+                          | typeDefinition
 {recoverWhile="#auto"}
 
 // {recoverWhile="compilationUnitRecover"}
@@ -174,7 +176,7 @@ implements="io.github.garmin.monkeyc.lang.psi.MonkeyComponent"
 
 moduleBody ::= LBRACE moduleBodyMembers RBRACE {pin=1}
 moduleBodyMembers ::= moduleBodyMember* {implements="io.github.garmin.monkeyc.lang.psi.MonkeyExecutionScope"}
-private moduleBodyMember ::= constDeclaration | fieldDeclarationList | functionDeclaration | classDeclaration | enumDeclaration | moduleDeclaration
+private moduleBodyMember ::= constDeclaration | fieldDeclarationList | functionDeclaration | classDeclaration | enumDeclaration | moduleDeclaration | typeDefinition
 
 private fullyQualifiedReferenceExpression ::= referenceOrThisExpression qualifiedReferenceExpression*
 
@@ -211,13 +213,13 @@ fieldDeclaration ::= varOrFieldDeclaration
 
 // function
 functionDeclaration ::= modifiers FUNCTION componentName
- LPAREN formalParameterDeclarations? RPAREN block {
+ LPAREN formalParameterDeclarations? RPAREN asTypeClause? block {
 pin=3
 mixin="io.github.garmin.monkeyc.lang.psi.impl.AbstractMonkeyComponentImpl"
 implements="io.github.garmin.monkeyc.lang.psi.MonkeyComponent"
 }
 
-formalParameterDeclarations ::= componentName (COMMA componentName)*
+formalParameterDeclarations ::= componentName asTypeClause? (COMMA componentName asTypeClause?)*
 
 block ::= LBRACE blockStatement* RBRACE
 
@@ -227,13 +229,19 @@ blockStatement ::= variableDeclarationList SEMI
 variableDeclarationList ::= VAR variableDeclaration (COMMA variableDeclaration)*
 variableDeclaration ::= varOrFieldDeclaration
 
-private varOrFieldDeclaration ::= componentName (LBRACKET RBRACKET)* (EQ variableInitializer)? {
+private varOrFieldDeclaration ::= componentName (LBRACKET RBRACKET)* asTypeClause? (EQ variableInitializer)? {
 pin=1
 mixin="io.github.garmin.monkeyc.lang.psi.impl.AbstractMonkeyComponentImpl"
 implements="io.github.garmin.monkeyc.lang.psi.MonkeyComponent"
 }
 
-variableInitializer ::= arrayInitializer | expression
+typeDefinition ::= TYPEDEF componentName asTypeClause? SEMI {pin=2}
+
+private typeReference ::= qualifiedName QUES?
+
+asTypeClause ::= AS typeReference (OR typeReference)*
+
+variableInitializer ::= (arrayInitializer | expression) asTypeClause?
 
 arrayInitializer ::= LBRACE (variableInitializer (COMMA variableInitializer)*)? COMMA? RBRACE
 
@@ -290,7 +298,7 @@ private referenceOrThisExpression ::= referenceExpression
                                     | thisExpression
                                     | blingExpression
 
-expression ::= conditionalExpression (assignmentOperator expression)?
+expression ::= conditionalExpression (assignmentOperator expression)? asTypeClause?
 
 assignmentOperator ::= EQ
                      | PLUSEQ
