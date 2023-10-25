@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyRelationalOpImpl extends MonkeyPsiCompositeElementImpl implements MonkeyRelationalOp {
 
-  public MonkeyRelationalOpImpl(ASTNode node) {
+  public MonkeyRelationalOpImpl(@NotNull ASTNode node) {
     super(node);
   }
 

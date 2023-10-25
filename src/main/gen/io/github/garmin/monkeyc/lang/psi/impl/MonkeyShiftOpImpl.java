@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyShiftOpImpl extends MonkeyPsiCompositeElementImpl implements MonkeyShiftOp {
 
-  public MonkeyShiftOpImpl(ASTNode node) {
+  public MonkeyShiftOpImpl(@NotNull ASTNode node) {
     super(node);
   }
 

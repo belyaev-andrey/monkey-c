@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyBlockStatementImpl extends MonkeyPsiCompositeElementImpl implements MonkeyBlockStatement {
 
-  public MonkeyBlockStatementImpl(ASTNode node) {
+  public MonkeyBlockStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 

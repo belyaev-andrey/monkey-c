@@ -1,6 +1,5 @@
 package io.github.garmin.monkeyc.lang.psi.impl
 
-import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.UnfairTextRange
@@ -13,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.MonkeyReference
 import io.github.garmin.monkeyc.lang.psi.util.MonkeyElementGenerator.createIdentifierFromText
 import io.github.garmin.monkeyc.lang.resolve.MonkeyResolver
 
-open class MonkeyReferenceImpl(node: ASTNode?) : MonkeyExpressionImpl(node), MonkeyReference, PsiPolyVariantReference {
+open class MonkeyReferenceImpl(node: ASTNode) : MonkeyExpressionImpl(node), MonkeyReference, PsiPolyVariantReference {
     override fun getElement(): PsiElement {
         return this
     }

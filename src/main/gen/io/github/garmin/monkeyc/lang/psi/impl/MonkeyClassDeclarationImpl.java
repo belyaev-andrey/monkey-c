@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyClassDeclarationImpl extends AbstractMonkeyPsiClass implements MonkeyClassDeclaration {
 
-  public MonkeyClassDeclarationImpl(ASTNode node) {
+  public MonkeyClassDeclarationImpl(@NotNull ASTNode node) {
     super(node);
   }
 

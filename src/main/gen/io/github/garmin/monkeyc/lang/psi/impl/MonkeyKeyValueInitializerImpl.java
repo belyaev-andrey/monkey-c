@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyKeyValueInitializerImpl extends MonkeyPsiCompositeElementImpl implements MonkeyKeyValueInitializer {
 
-  public MonkeyKeyValueInitializerImpl(ASTNode node) {
+  public MonkeyKeyValueInitializerImpl(@NotNull ASTNode node) {
     super(node);
   }
 

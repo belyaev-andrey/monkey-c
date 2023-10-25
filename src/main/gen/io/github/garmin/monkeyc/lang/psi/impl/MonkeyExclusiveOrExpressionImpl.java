@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyExclusiveOrExpressionImpl extends MonkeyExpressionImpl implements MonkeyExclusiveOrExpression {
 
-  public MonkeyExclusiveOrExpressionImpl(ASTNode node) {
+  public MonkeyExclusiveOrExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 

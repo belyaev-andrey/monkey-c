@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyIdentifierSuffixImpl extends MonkeyPsiCompositeElementImpl implements MonkeyIdentifierSuffix {
 
-  public MonkeyIdentifierSuffixImpl(ASTNode node) {
+  public MonkeyIdentifierSuffixImpl(@NotNull ASTNode node) {
     super(node);
   }
 

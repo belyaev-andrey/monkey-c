@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyModuleBodyImpl extends MonkeyPsiCompositeElementImpl implements MonkeyModuleBody {
 
-  public MonkeyModuleBodyImpl(ASTNode node) {
+  public MonkeyModuleBodyImpl(@NotNull ASTNode node) {
     super(node);
   }
 

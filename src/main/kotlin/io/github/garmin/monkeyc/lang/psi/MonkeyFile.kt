@@ -9,6 +9,7 @@ import com.intellij.psi.scope.PsiScopeProcessor
 import io.github.garmin.monkeyc.ide.i18n.MsgBundle
 import io.github.garmin.monkeyc.lang.MonkeyCLanguage
 import io.github.garmin.monkeyc.lang.file.MonkeyFileType
+import io.github.garmin.monkeyc.lang.psi.impl.MonkeyPsiCompositeElementImpl
 
 class MonkeyFile(viewProvider: FileViewProvider): PsiFileBase(viewProvider, MonkeyCLanguage) {
 
@@ -30,7 +31,7 @@ class MonkeyFile(viewProvider: FileViewProvider): PsiFileBase(viewProvider, Monk
         lastParent: PsiElement?,
         place: PsiElement
     ): Boolean {
-        //TODO implement properly
-        return super.processDeclarations(processor, state, lastParent, place)
+        return MonkeyPsiCompositeElementImpl.processDeclarationsImpl(this, processor, state)
+                && super.processDeclarations(processor, state, lastParent, place)
     }
 }

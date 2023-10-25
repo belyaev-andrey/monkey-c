@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyRelationalExpressionImpl extends MonkeyExpressionImpl implements MonkeyRelationalExpression {
 
-  public MonkeyRelationalExpressionImpl(ASTNode node) {
+  public MonkeyRelationalExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 

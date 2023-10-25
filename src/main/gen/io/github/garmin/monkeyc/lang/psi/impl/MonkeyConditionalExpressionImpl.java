@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyConditionalExpressionImpl extends MonkeyExpressionImpl implements MonkeyConditionalExpression {
 
-  public MonkeyConditionalExpressionImpl(ASTNode node) {
+  public MonkeyConditionalExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 

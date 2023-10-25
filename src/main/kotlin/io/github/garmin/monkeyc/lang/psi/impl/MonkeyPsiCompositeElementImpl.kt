@@ -47,58 +47,67 @@ open class MonkeyPsiCompositeElementImpl(node: ASTNode) : ASTWrapperPsiElement(n
         private fun getDeclarationElementToProcess(context: PsiElement): Set<MonkeyComponentName?> {
             val result: MutableSet<MonkeyComponentName?> = THashSet()
             for (child in context.children) {
-                if (child is MonkeyUsingDeclaration) {
-                    result.add(child.getComponentName())
-                }
-                if (child is MonkeyModuleDeclaration) {
-                    val moduleBodyMembers = child.getModuleBody()!!.getModuleBodyMembers()
-                    if (moduleBodyMembers != null) {
-                        val moduleChildrenNames =
-                            getDeclarationElementToProcess(moduleBodyMembers) // moduleBodyMembers.getChildren() will contain stuff
-                        result.addAll(moduleChildrenNames)
+                when (child) {
+                    is MonkeyUsingDeclaration -> {
+                        if (child.getComponentName() != null) {
+                            result.add(child.getComponentName())
+                        }
                     }
-                    result.add(child.getComponentName())
-                }
-                if (child is MonkeyClassDeclaration) {
-                    if (child.getBodyMembers() != null) {
-                        val classChildrenNames = getDeclarationElementToProcess(
-                            child.getBodyMembers()!!
-                        )
-                        result.addAll(classChildrenNames)
-                    }
-                    result.add(child.getComponentName())
-                }
-                if (child is MonkeyEnumDeclaration) {
-                    val enumConstantList = child.getEnumConstantList()
-                    for (monkeyEnumConstant in enumConstantList) {
-                        result.add(monkeyEnumConstant.getComponentName())
-                    }
-                }
-                if (child is MonkeyFieldDeclarationList) {
-                    for (fieldDeclaration in child.getFieldDeclarationList()) {
-                        result.add(fieldDeclaration.getComponentName())
-                    }
-                }
-                if (child is MonkeyFormalParameterDeclarations) {
-                    for (monkeyComponentName in child.getComponentNameList()) {
-                        result.add(monkeyComponentName)
-                    }
-                }
 
-                // TODO: there must be some other way...
-                if (child is MonkeyBlock) {
-                    val blockStatementList = child.getBlockStatementList()
-                    for (monkeyBlockStatement in blockStatementList) {
-                        val variableDeclarationList = monkeyBlockStatement.getVariableDeclarationList()
-                        if (variableDeclarationList != null) {
-                            for (monkeyVariableDeclaration in variableDeclarationList.getVariableDeclarationList()) {
-                                result.add(monkeyVariableDeclaration.getComponentName())
+                    is MonkeyModuleDeclaration -> {
+                        val moduleBodyMembers = child.getModuleBody()!!.getModuleBodyMembers()
+                        if (moduleBodyMembers != null) {
+                            val moduleChildrenNames =
+                                getDeclarationElementToProcess(moduleBodyMembers) // moduleBodyMembers.getChildren() will contain stuff
+                            result.addAll(moduleChildrenNames)
+                        }
+                        result.add(child.getComponentName())
+                    }
+
+                    is MonkeyClassDeclaration -> {
+                        if (child.getBodyMembers() != null) {
+                            val classChildrenNames = getDeclarationElementToProcess(
+                                child.getBodyMembers()!!
+                            )
+                            result.addAll(classChildrenNames)
+                        }
+                        result.add(child.getComponentName())
+                    }
+
+                    is MonkeyEnumDeclaration -> {
+                        val enumConstantList = child.getEnumConstantList()
+                        for (monkeyEnumConstant in enumConstantList) {
+                            result.add(monkeyEnumConstant.getComponentName())
+                        }
+                    }
+
+                    is MonkeyFieldDeclarationList -> {
+                        for (fieldDeclaration in child.getFieldDeclarationList()) {
+                            result.add(fieldDeclaration.getComponentName())
+                        }
+                    }
+
+                    is MonkeyFormalParameterDeclarations -> {
+                        for (monkeyComponentName in child.getComponentNameList()) {
+                            result.add(monkeyComponentName)
+                        }
+                    }
+                    // TODO: there must be some other way...
+                    is MonkeyBlock -> {
+                        val blockStatementList = child.getBlockStatementList()
+                        for (monkeyBlockStatement in blockStatementList) {
+                            val variableDeclarationList = monkeyBlockStatement.getVariableDeclarationList()
+                            if (variableDeclarationList != null) {
+                                for (monkeyVariableDeclaration in variableDeclarationList.getVariableDeclarationList()) {
+                                    result.add(monkeyVariableDeclaration.getComponentName())
+                                }
                             }
                         }
                     }
-                }
-                if (child is MonkeyComponent) {
-                    result.add(child.getComponentName())
+
+                    is MonkeyComponent -> {
+                        result.add(child.getComponentName())
+                    }
                 }
             }
             return result

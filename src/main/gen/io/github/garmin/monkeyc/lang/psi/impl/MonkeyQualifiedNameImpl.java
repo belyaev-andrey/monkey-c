@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyQualifiedNameImpl extends MonkeyPsiCompositeElementImpl implements MonkeyQualifiedName {
 
-  public MonkeyQualifiedNameImpl(ASTNode node) {
+  public MonkeyQualifiedNameImpl(@NotNull ASTNode node) {
     super(node);
   }
 

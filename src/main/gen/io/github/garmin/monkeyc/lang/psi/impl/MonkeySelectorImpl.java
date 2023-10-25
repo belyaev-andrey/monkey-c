@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeySelectorImpl extends MonkeyPsiCompositeElementImpl implements MonkeySelector {
 
-  public MonkeySelectorImpl(ASTNode node) {
+  public MonkeySelectorImpl(@NotNull ASTNode node) {
     super(node);
   }
 

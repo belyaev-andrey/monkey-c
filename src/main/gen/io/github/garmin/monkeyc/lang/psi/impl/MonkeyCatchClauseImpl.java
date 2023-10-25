@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyCatchClauseImpl extends MonkeyPsiCompositeElementImpl implements MonkeyCatchClause {
 
-  public MonkeyCatchClauseImpl(ASTNode node) {
+  public MonkeyCatchClauseImpl(@NotNull ASTNode node) {
     super(node);
   }
 

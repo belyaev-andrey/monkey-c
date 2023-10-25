@@ -12,10 +12,11 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyThisExpressionImpl extends MonkeyReferenceImpl implements MonkeyThisExpression {
 
-  public MonkeyThisExpressionImpl(ASTNode node) {
+  public MonkeyThisExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull MonkeyVisitor visitor) {
     visitor.visitThisExpression(this);
   }

@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyShiftExpressionImpl extends MonkeyExpressionImpl implements MonkeyShiftExpression {
 
-  public MonkeyShiftExpressionImpl(ASTNode node) {
+  public MonkeyShiftExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 

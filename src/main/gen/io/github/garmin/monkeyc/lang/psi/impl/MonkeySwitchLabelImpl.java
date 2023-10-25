@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeySwitchLabelImpl extends MonkeyPsiCompositeElementImpl implements MonkeySwitchLabel {
 
-  public MonkeySwitchLabelImpl(ASTNode node) {
+  public MonkeySwitchLabelImpl(@NotNull ASTNode node) {
     super(node);
   }
 

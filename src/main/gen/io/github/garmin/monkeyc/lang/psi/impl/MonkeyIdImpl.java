@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyIdImpl extends MonkeyPsiCompositeElementImpl implements MonkeyId {
 
-  public MonkeyIdImpl(ASTNode node) {
+  public MonkeyIdImpl(@NotNull ASTNode node) {
     super(node);
   }
 

@@ -29,6 +29,7 @@
     CONST = "const"
     MODULE = "module"
     USING = "using"
+    IMPORT = "import"
     AS = "as"
     ENUM = "enum"
     EXTENDS = "extends"
@@ -142,10 +143,9 @@
   extends(".*Expression")="expression"
 }
 
-monkeyCFile ::= compilationUnit*
+monkeyCFile ::= (usingDeclaration | importDeclaration)* compilationUnit*
 
-private compilationUnit ::= usingDeclaration
-                          | moduleDeclaration
+private compilationUnit ::= moduleDeclaration
                           | classDeclaration
                           | enumDeclaration
                           | constDeclaration
@@ -157,10 +157,12 @@ private compilationUnit ::= usingDeclaration
 // {recoverWhile="compilationUnitRecover"}
 // private compilationUnitRecover ::= !(CLASS | ENUM | HIDDEN | LPAREN | STATIC | USING)
 
-// You can bring a module into your scoping level with the using keyword.
+// You can bring a module into your scoping level with the using or import keyword.
 // using allows a module to be imported into another class or module by a symbol.
 // using statements are scoped to the class or module in which they are defined.
-usingDeclaration ::= USING fullyQualifiedReferenceExpression (AS componentName)? SEMI {pin=2}
+usingDeclaration ::= USING  fullyQualifiedReferenceExpression (AS componentName)? SEMI {pin=2}
+
+importDeclaration ::= IMPORT fullyQualifiedReferenceExpression SEMI {pin=2}
 
 // module
 // TODO: can a module have static/hidden modifiers?

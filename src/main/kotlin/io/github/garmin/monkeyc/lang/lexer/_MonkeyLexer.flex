@@ -54,6 +54,7 @@ CHARLITERAL='[^']*'
   "const"                         { return CONST; }
   "module"                        { return MODULE; }
   "using"                         { return USING; }
+  "import"                        { return IMPORT; }
   "as"                            { return AS; }
   "enum"                          { return ENUM; }
   "extends"                       { return EXTENDS; }

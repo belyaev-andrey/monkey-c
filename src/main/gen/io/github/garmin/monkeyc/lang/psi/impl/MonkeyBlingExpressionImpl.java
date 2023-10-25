@@ -12,10 +12,11 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyBlingExpressionImpl extends MonkeyReferenceImpl implements MonkeyBlingExpression {
 
-  public MonkeyBlingExpressionImpl(ASTNode node) {
+  public MonkeyBlingExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull MonkeyVisitor visitor) {
     visitor.visitBlingExpression(this);
   }

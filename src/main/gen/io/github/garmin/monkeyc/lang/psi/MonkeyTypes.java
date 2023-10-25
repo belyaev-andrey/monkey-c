@@ -48,6 +48,7 @@ public interface MonkeyTypes {
   IElementType HAS_EXPRESSION = new MonkeyElementType("HAS_EXPRESSION");
   IElementType ID = new MonkeyElementType("ID");
   IElementType IDENTIFIER_SUFFIX = new MonkeyElementType("IDENTIFIER_SUFFIX");
+  IElementType IMPORT_DECLARATION = new MonkeyElementType("IMPORT_DECLARATION");
   IElementType INCLUSIVE_OR_EXPRESSION = new MonkeyElementType("INCLUSIVE_OR_EXPRESSION");
   IElementType INSTANCE_OF_EXPRESSION = new MonkeyElementType("INSTANCE_OF_EXPRESSION");
   IElementType KEY_VALUE_INITIALIZER = new MonkeyElementType("KEY_VALUE_INITIALIZER");
@@ -123,6 +124,7 @@ public interface MonkeyTypes {
   IElementType HIDDEN = new MonkeyTokenType("hidden");
   IElementType IDENTIFIER = new MonkeyTokenType("IDENTIFIER");
   IElementType IF = new MonkeyTokenType("if");
+  IElementType IMPORT = new MonkeyTokenType("import");
   IElementType INSTANCEOF = new MonkeyTokenType("instanceof");
   IElementType INTLITERAL = new MonkeyTokenType("INTLITERAL");
   IElementType LBRACE = new MonkeyTokenType("{");
@@ -296,6 +298,9 @@ public interface MonkeyTypes {
       }
       else if (type == IDENTIFIER_SUFFIX) {
         return new MonkeyIdentifierSuffixImpl(node);
+      }
+      else if (type == IMPORT_DECLARATION) {
+        return new MonkeyImportDeclarationImpl(node);
       }
       else if (type == INCLUSIVE_OR_EXPRESSION) {
         return new MonkeyInclusiveOrExpressionImpl(node);

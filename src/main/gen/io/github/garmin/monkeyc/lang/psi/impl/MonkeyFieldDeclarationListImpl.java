@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyFieldDeclarationListImpl extends MonkeyPsiCompositeElementImpl implements MonkeyFieldDeclarationList {
 
-  public MonkeyFieldDeclarationListImpl(ASTNode node) {
+  public MonkeyFieldDeclarationListImpl(@NotNull ASTNode node) {
     super(node);
   }
 

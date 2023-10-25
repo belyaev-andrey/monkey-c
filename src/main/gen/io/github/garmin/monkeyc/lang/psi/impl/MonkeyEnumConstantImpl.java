@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyEnumConstantImpl extends AbstractMonkeyComponentImpl implements MonkeyEnumConstant {
 
-  public MonkeyEnumConstantImpl(ASTNode node) {
+  public MonkeyEnumConstantImpl(@NotNull ASTNode node) {
     super(node);
   }
 

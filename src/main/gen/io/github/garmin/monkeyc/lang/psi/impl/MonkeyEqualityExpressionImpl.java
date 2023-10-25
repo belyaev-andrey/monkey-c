@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyEqualityExpressionImpl extends MonkeyExpressionImpl implements MonkeyEqualityExpression {
 
-  public MonkeyEqualityExpressionImpl(ASTNode node) {
+  public MonkeyEqualityExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 

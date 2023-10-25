@@ -10,15 +10,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static io.github.garmin.monkeyc.lang.psi.MonkeyTypes.*;
 import io.github.garmin.monkeyc.lang.psi.*;
 
-public class MonkeyReferenceExpressionImpl extends MonkeyReferenceImpl implements MonkeyReferenceExpression {
+public class MonkeyImportDeclarationImpl extends MonkeyPsiCompositeElementImpl implements MonkeyImportDeclaration {
 
-  public MonkeyReferenceExpressionImpl(@NotNull ASTNode node) {
+  public MonkeyImportDeclarationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull MonkeyVisitor visitor) {
-    visitor.visitReferenceExpression(this);
+    visitor.visitImportDeclaration(this);
   }
 
   @Override
@@ -29,8 +28,8 @@ public class MonkeyReferenceExpressionImpl extends MonkeyReferenceImpl implement
 
   @Override
   @NotNull
-  public MonkeyId getId() {
-    return findNotNullChildByClass(MonkeyId.class);
+  public List<MonkeyExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, MonkeyExpression.class);
   }
 
 }

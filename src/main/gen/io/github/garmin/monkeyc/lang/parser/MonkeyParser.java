@@ -641,8 +641,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // usingDeclaration
-  //                           | moduleDeclaration
+  // moduleDeclaration
   //                           | classDeclaration
   //                           | enumDeclaration
   //                           | constDeclaration
@@ -653,8 +652,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "compilationUnit")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_);
-    r = usingDeclaration(b, l + 1);
-    if (!r) r = moduleDeclaration(b, l + 1);
+    r = moduleDeclaration(b, l + 1);
     if (!r) r = classDeclaration(b, l + 1);
     if (!r) r = enumDeclaration(b, l + 1);
     if (!r) r = constDeclaration(b, l + 1);
@@ -1414,6 +1412,21 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // IMPORT fullyQualifiedReferenceExpression SEMI
+  public static boolean importDeclaration(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "importDeclaration")) return false;
+    if (!nextTokenIs(b, IMPORT)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, IMPORT_DECLARATION, null);
+    r = consumeToken(b, IMPORT);
+    r = r && fullyQualifiedReferenceExpression(b, l + 1);
+    p = r; // pin = 2
+    r = r && consumeToken(b, SEMI);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
   // exclusiveOrExpression (BAR exclusiveOrExpression)*
   public static boolean inclusiveOrExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "inclusiveOrExpression")) return false;
@@ -1640,13 +1653,44 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // compilationUnit*
+  // (usingDeclaration | importDeclaration)* compilationUnit*
   static boolean monkeyCFile(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "monkeyCFile")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = monkeyCFile_0(b, l + 1);
+    r = r && monkeyCFile_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (usingDeclaration | importDeclaration)*
+  private static boolean monkeyCFile_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "monkeyCFile_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!monkeyCFile_0_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "monkeyCFile_0", c)) break;
+    }
+    return true;
+  }
+
+  // usingDeclaration | importDeclaration
+  private static boolean monkeyCFile_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "monkeyCFile_0_0")) return false;
+    boolean r;
+    r = usingDeclaration(b, l + 1);
+    if (!r) r = importDeclaration(b, l + 1);
+    return r;
+  }
+
+  // compilationUnit*
+  private static boolean monkeyCFile_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "monkeyCFile_1")) return false;
     while (true) {
       int c = current_position_(b);
       if (!compilationUnit(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "monkeyCFile", c)) break;
+      if (!empty_element_parsed_guard_(b, "monkeyCFile_1", c)) break;
     }
     return true;
   }
@@ -2483,7 +2527,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // USING fullyQualifiedReferenceExpression (AS componentName)? SEMI
+  // USING  fullyQualifiedReferenceExpression (AS componentName)? SEMI
   public static boolean usingDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "usingDeclaration")) return false;
     if (!nextTokenIs(b, USING)) return false;
@@ -2637,5 +2681,5 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     LBRACE, LBRACKET, LONGLITERAL, LPAREN, MODULE, NEW,
     NULL, PLUS, PLUSPLUS, RETURN, SELF, SEMI,
     STATIC, SUB, SUBSUB, SWITCH, THIS, THROW,
-    TILDE, TRUE, TRY, USING, VAR, VOID, WHILE, STRING);
+    TILDE, TRUE, TRY, VAR, VOID, WHILE, STRING);
 }

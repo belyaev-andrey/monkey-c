@@ -12,7 +12,7 @@ import io.github.garmin.monkeyc.lang.psi.*;
 
 public class MonkeyBitwiseExpressionImpl extends MonkeyExpressionImpl implements MonkeyBitwiseExpression {
 
-  public MonkeyBitwiseExpressionImpl(ASTNode node) {
+  public MonkeyBitwiseExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
