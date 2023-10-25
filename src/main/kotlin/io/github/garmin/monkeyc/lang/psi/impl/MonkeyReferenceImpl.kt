@@ -1,118 +1,94 @@
-package io.github.garmin.monkeyc.lang.psi.impl;
+package io.github.garmin.monkeyc.lang.psi.impl
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.UnfairTextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
-import io.github.garmin.monkeyc.lang.psi.MonkeyId;
-import io.github.garmin.monkeyc.lang.psi.MonkeyReference;
-import io.github.garmin.monkeyc.lang.psi.util.MonkeyElementGenerator;
-import io.github.garmin.monkeyc.lang.resolve.MonkeyResolver;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.codeInsight.lookup.LookupElement
+import com.intellij.lang.ASTNode
+import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.util.UnfairTextRange
+import com.intellij.psi.*
+import com.intellij.psi.impl.source.resolve.ResolveCache
+import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.util.IncorrectOperationException
+import io.github.garmin.monkeyc.lang.psi.MonkeyId
+import io.github.garmin.monkeyc.lang.psi.MonkeyReference
+import io.github.garmin.monkeyc.lang.psi.util.MonkeyElementGenerator.createIdentifierFromText
+import io.github.garmin.monkeyc.lang.resolve.MonkeyResolver
 
-import java.util.List;
-
-public class MonkeyReferenceImpl extends MonkeyExpressionImpl implements MonkeyReference, PsiPolyVariantReference {
-  public MonkeyReferenceImpl(ASTNode node) {
-    super(node);
-  }
-
-  @Override
-  public PsiElement getElement() {
-    return this;
-  }
-
-  @Override
-  public PsiReference getReference() {
-    return this;
-  }
-
-  @Override
-  public TextRange getRangeInElement() {
-    final TextRange textRange = getTextRange();
-
-    MonkeyReference[] references = PsiTreeUtil.getChildrenOfType(this, MonkeyReference.class);
-    if (references != null && references.length > 0) {
-      TextRange lastReferenceRange = references[references.length - 1].getTextRange();
-      return new UnfairTextRange(
-          lastReferenceRange.getStartOffset() - textRange.getStartOffset(),
-          lastReferenceRange.getEndOffset() - textRange.getEndOffset()
-      );
+open class MonkeyReferenceImpl(node: ASTNode?) : MonkeyExpressionImpl(node), MonkeyReference, PsiPolyVariantReference {
+    override fun getElement(): PsiElement {
+        return this
     }
 
-    return new UnfairTextRange(0, textRange.getEndOffset() - textRange.getStartOffset());
-  }
-
-  @Nullable
-  @Override
-  public PsiElement resolve() {
-    final ResolveResult[] resolveResults = multiResolve(true);
-    return resolveResults.length == 0 ||
-        resolveResults.length > 1 ||
-        !resolveResults[0].isValidResult() ? null : resolveResults[0].getElement();
-  }
-
-
-  @NotNull
-  @Override
-  public ResolveResult[] multiResolve(boolean incompleteCode) {
-    final List<? extends PsiElement> elements =
-        ResolveCache.getInstance(getProject()).resolveWithCaching(this, MonkeyResolver.INSTANCE, true, incompleteCode);
-    //return MonkeyResolveUtil.toCandidateInfoArray(elements);
-    return PsiElementResolveResult.createResults(elements);
-  }
-
-  @NotNull
-  @Override
-  public String getCanonicalText() {
-    return getText();
-  }
-
-  @Override
-  public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-    PsiElement element = this;
-    if (getText().indexOf('.') != -1) {
-      // libPrefix.name
-      final PsiElement lastChild = getLastChild();
-      element = lastChild == null ? this : lastChild;
+    override fun getReference(): PsiReference? {
+        return this
     }
-    final MonkeyId identifier = PsiTreeUtil.getChildOfType(element, MonkeyId.class);
-    final MonkeyId identifierNew = MonkeyElementGenerator.INSTANCE.createIdentifierFromText(getProject(), newElementName);
-    if (identifier != null && identifierNew != null) {
-      element.getNode().replaceChild(identifier.getNode(), identifierNew.getNode());
+
+    override fun getRangeInElement(): TextRange {
+        val textRange = textRange
+        val references = PsiTreeUtil.getChildrenOfType(this, MonkeyReference::class.java)
+        if (!references.isNullOrEmpty()) {
+            val lastReferenceRange = references[references.size - 1].textRange
+            return UnfairTextRange(
+                lastReferenceRange.startOffset - textRange.startOffset,
+                lastReferenceRange.endOffset - textRange.endOffset
+            )
+        }
+        return UnfairTextRange(0, textRange.endOffset - textRange.startOffset)
     }
-    return this;
-  }
 
-  @Override
-  public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-    return this;
-  }
-
-  @Override
-  public boolean isReferenceTo(PsiElement element) {
-    final MonkeyReference[] references = PsiTreeUtil.getChildrenOfType(this, MonkeyReference.class);
-    final boolean chain = references != null && references.length == 2;
-    if (chain) {
-      return false;
+    override fun resolve(): PsiElement? {
+        val resolveResults = multiResolve(true)
+        return if (resolveResults.isEmpty() || resolveResults.size > 1 ||
+            !resolveResults[0].isValidResult
+        ) null else resolveResults[0].element
     }
-    final PsiElement target = resolve();
-    return target == element;
-  }
 
-  @NotNull
-  @Override
-  public Object[] getVariants() {
-    return LookupElement.EMPTY_ARRAY;
-  }
+    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+        val elements = ResolveCache.getInstance(getProject())
+            .resolveWithCaching(this, MonkeyResolver.INSTANCE, true, incompleteCode)!!
+        //return MonkeyResolveUtil.toCandidateInfoArray(elements);
+        return PsiElementResolveResult.createResults(elements)
+    }
 
-  @Override
-  public boolean isSoft() {
-    return false;
-  }
+    override fun getCanonicalText(): String {
+        return text
+    }
+
+    @Throws(IncorrectOperationException::class)
+    override fun handleElementRename(newElementName: String): PsiElement {
+        var element: PsiElement = this
+        if (text.indexOf('.') != -1) {
+            // libPrefix.name
+            val lastChild = lastChild
+            element = lastChild ?: this
+        }
+        val identifier = PsiTreeUtil.getChildOfType(element, MonkeyId::class.java)
+        val identifierNew = createIdentifierFromText(getProject(), newElementName)
+        if (identifier != null && identifierNew != null) {
+            element.node.replaceChild(identifier.node, identifierNew.node)
+        }
+        return this
+    }
+
+    @Throws(IncorrectOperationException::class)
+    override fun bindToElement(element: PsiElement): PsiElement {
+        return this
+    }
+
+    override fun isReferenceTo(element: PsiElement): Boolean {
+        val references = PsiTreeUtil.getChildrenOfType(this, MonkeyReference::class.java)
+        val chain = references != null && references.size == 2
+        if (chain) {
+            return false
+        }
+        val target = resolve()
+        return target === element
+    }
+
+    override fun getVariants(): Array<Any> {
+        return emptyArray()
+    }
+
+    override fun isSoft(): Boolean {
+        return false
+    }
 }

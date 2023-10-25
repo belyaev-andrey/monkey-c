@@ -4,6 +4,6 @@ import com.intellij.psi.PsiNameIdentifierOwner
 
 interface MonkeyComponent: MonkeyPsiCompositeElement, PsiNameIdentifierOwner {
 
-    fun getComponentName(): MonkeyComponentName
+    fun getComponentName(): MonkeyComponentName?
 
 }

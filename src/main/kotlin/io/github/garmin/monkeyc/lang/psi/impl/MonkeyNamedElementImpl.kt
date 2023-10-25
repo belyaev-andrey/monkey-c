@@ -1,62 +1,47 @@
-package io.github.garmin.monkeyc.lang.psi.impl;
+package io.github.garmin.monkeyc.lang.psi.impl
 
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
-import io.github.garmin.monkeyc.lang.psi.MonkeyId;
-import io.github.garmin.monkeyc.lang.psi.MonkeyNamedElement;
-import io.github.garmin.monkeyc.lang.psi.util.MonkeyElementGenerator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.lang.ASTNode
+import com.intellij.navigation.ItemPresentation
+import com.intellij.navigation.NavigationItem
+import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.util.IncorrectOperationException
+import io.github.garmin.monkeyc.lang.psi.MonkeyId
+import io.github.garmin.monkeyc.lang.psi.MonkeyNamedElement
+import io.github.garmin.monkeyc.lang.psi.util.MonkeyElementGenerator.createIdentifierFromText
 
-public abstract class MonkeyNamedElementImpl extends MonkeyPsiCompositeElementImpl implements MonkeyNamedElement {
-
-  public MonkeyNamedElementImpl(@NotNull ASTNode node) {
-    super(node);
-  }
-
-  @Override
-  public String getName() {
-    return getId().getText();
-  }
-
-  // if reference/declaration is renamed, then this is called on all references and declaration
-  @Override
-  public PsiElement setName(@NotNull String newElementName) throws IncorrectOperationException {
-    final MonkeyId identifier = getId();
-    final MonkeyId identifierNew = MonkeyElementGenerator.INSTANCE.createIdentifierFromText(getProject(), newElementName);
-    if (identifierNew != null) {
-      getNode().replaceChild(identifier.getNode(), identifierNew.getNode());
+abstract class MonkeyNamedElementImpl(node: ASTNode) : MonkeyPsiCompositeElementImpl(node), MonkeyNamedElement {
+    override fun getName(): String? {
+        return getId().text
     }
-    return this;
-  }
 
-  @Nullable
-  public ItemPresentation getPresentation() {
-    final PsiElement parent = getParent();
-    if (parent instanceof NavigationItem) {
-      return ((NavigationItem) parent).getPresentation();
+    // if reference/declaration is renamed, then this is called on all references and declaration
+    @Throws(IncorrectOperationException::class)
+    override fun setName(newElementName: String): PsiElement {
+        val identifier = getId()
+        val identifierNew = createIdentifierFromText(getProject(), newElementName)
+        if (identifierNew != null) {
+            node.replaceChild(identifier.node, identifierNew.node)
+        }
+        return this
     }
-    return null;
-  }
 
-  @Override
-  public PsiElement getNameIdentifier() {
-    return this;
-  }
+    override fun getPresentation(): ItemPresentation? {
+        val parent = parent
+        return if (parent is NavigationItem) {
+            (parent as NavigationItem).presentation
+        } else null
+    }
 
-  @NotNull
-  @Override
-  public MonkeyId getId() {
-    return PsiTreeUtil.getRequiredChildOfType(this, MonkeyId.class);
-  }
+    override fun getNameIdentifier(): PsiElement? {
+        return this
+    }
 
-  @Override
-  public String toString() {
-    return "MonkeyComponentName:" + getName();
-  }
+    override fun getId(): MonkeyId {
+        return PsiTreeUtil.getRequiredChildOfType(this, MonkeyId::class.java)
+    }
 
+    override fun toString(): String {
+        return "MonkeyComponentName:$name"
+    }
 }

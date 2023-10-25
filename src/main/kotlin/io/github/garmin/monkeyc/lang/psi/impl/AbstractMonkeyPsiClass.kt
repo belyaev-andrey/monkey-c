@@ -1,33 +1,23 @@
-package io.github.garmin.monkeyc.lang.psi.impl;
+package io.github.garmin.monkeyc.lang.psi.impl
 
+import com.intellij.lang.ASTNode
+import io.github.garmin.monkeyc.lang.psi.MonkeyClass
+import io.github.garmin.monkeyc.lang.psi.MonkeyClassBodyMembers
+import io.github.garmin.monkeyc.lang.psi.MonkeyClassDeclaration
 
-import com.intellij.lang.ASTNode;
-import io.github.garmin.monkeyc.lang.psi.MonkeyClass;
-import io.github.garmin.monkeyc.lang.psi.MonkeyClassBody;
-import io.github.garmin.monkeyc.lang.psi.MonkeyClassBodyMembers;
-import io.github.garmin.monkeyc.lang.psi.MonkeyClassDeclaration;
-import org.jetbrains.annotations.NotNull;
-
-abstract public class AbstractMonkeyPsiClass extends AbstractMonkeyComponentImpl implements MonkeyClass {
-  public AbstractMonkeyPsiClass(@NotNull ASTNode node) {
-    super(node);
-  }
-
-  @Override
-  public MonkeyClassBodyMembers getBodyMembers() {
-    if (this instanceof MonkeyClassDeclaration) {
-      MonkeyClassDeclaration monkeyClassDeclaration = (MonkeyClassDeclaration) this;
-      MonkeyClassBody classBody = monkeyClassDeclaration.getClassBody();
-      if (classBody != null) {
-        return classBody.getClassBodyMembers();
-      }
+abstract class AbstractMonkeyPsiClass(node: ASTNode) : AbstractMonkeyComponentImpl(node), MonkeyClass {
+    override fun getBodyMembers(): MonkeyClassBodyMembers? {
+        if (this is MonkeyClassDeclaration) {
+            val monkeyClassDeclaration = this as MonkeyClassDeclaration
+            val classBody = monkeyClassDeclaration.getClassBody()
+            if (classBody != null) {
+                return classBody.getClassBodyMembers()
+            }
+        }
+        return null
     }
-    return null;
-  }
 
-
-  @Override
-  public String toString() {
-    return "MonkeyClassDeclaration:" + getName();
-  }
+    override fun toString(): String {
+        return "MonkeyClassDeclaration:" + getName()
+    }
 }

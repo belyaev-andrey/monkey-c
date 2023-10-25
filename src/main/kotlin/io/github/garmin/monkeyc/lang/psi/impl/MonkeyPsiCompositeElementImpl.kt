@@ -1,126 +1,107 @@
-package io.github.garmin.monkeyc.lang.psi.impl;
+package io.github.garmin.monkeyc.lang.psi.impl
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.IElementType;
-import gnu.trove.THashSet;
-import io.github.garmin.monkeyc.lang.psi.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.extapi.psi.ASTWrapperPsiElement
+import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiElement
+import com.intellij.psi.ResolveState
+import com.intellij.psi.scope.PsiScopeProcessor
+import com.intellij.psi.tree.IElementType
+import gnu.trove.THashSet
+import io.github.garmin.monkeyc.lang.psi.*
 
-import java.util.List;
-import java.util.Set;
+open class MonkeyPsiCompositeElementImpl(node: ASTNode) : ASTWrapperPsiElement(node), MonkeyPsiCompositeElement {
+    val tokenType: IElementType
+        get() = node.elementType
 
-public class MonkeyPsiCompositeElementImpl extends ASTWrapperPsiElement implements MonkeyPsiCompositeElement {
-
-  public MonkeyPsiCompositeElementImpl(@NotNull ASTNode node) {
-    super(node);
-  }
-
-  public IElementType getTokenType() {
-    return getNode().getElementType();
-  }
-
-  @Override
-  public String toString() {
-    return getTokenType().toString();
-  }
-
-  @Override
-  public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                     @NotNull ResolveState state,
-                                     PsiElement lastParent,
-                                     @NotNull PsiElement place) {
-    return processDeclarationsImpl(this, processor, state)
-      && super.processDeclarations(processor, state, lastParent, place);
-  }
-
-  public static boolean processDeclarationsImpl(@Nullable PsiElement context,
-                                                PsiScopeProcessor processor,
-                                                ResolveState state) {
-    if (context == null) {
-      return true;
+    override fun toString(): String {
+        return tokenType.toString()
     }
-    for (MonkeyComponentName element : getDeclarationElementToProcess(context)) {
-      if (!processor.execute(element, state)) {
-        return false;
-      }
+
+    override fun processDeclarations(
+        processor: PsiScopeProcessor,
+        state: ResolveState,
+        lastParent: PsiElement?,
+        place: PsiElement
+    ): Boolean {
+        return (processDeclarationsImpl(this, processor, state)
+                && super.processDeclarations(processor, state, lastParent, place))
     }
-    return true;
-  }
 
-  private static Set<MonkeyComponentName> getDeclarationElementToProcess(@NotNull PsiElement context) {
-    final Set<MonkeyComponentName> result = new THashSet<>();
-    for (PsiElement child : context.getChildren()) {
-
-      if (child instanceof MonkeyUsingDeclaration) {
-        MonkeyUsingDeclaration usingDeclaration = (MonkeyUsingDeclaration) child;
-        result.add(usingDeclaration.getComponentName());
-      }
-
-      if (child instanceof MonkeyModuleDeclaration) {
-        MonkeyModuleDeclaration moduleDeclaration = (MonkeyModuleDeclaration) child;
-        MonkeyModuleBodyMembers moduleBodyMembers = moduleDeclaration.getModuleBody().getModuleBodyMembers();
-        if (moduleBodyMembers != null) {
-          Set<MonkeyComponentName> moduleChildrenNames = getDeclarationElementToProcess(moduleBodyMembers);// moduleBodyMembers.getChildren() will contain stuff
-          result.addAll(moduleChildrenNames);
-        }
-        result.add(moduleDeclaration.getComponentName());
-      }
-
-      if (child instanceof MonkeyClassDeclaration) {
-        MonkeyClassDeclaration classDeclaration = (MonkeyClassDeclaration) child;
-
-        if (classDeclaration.getBodyMembers() != null) {
-          Set<MonkeyComponentName> classChildrenNames = getDeclarationElementToProcess(classDeclaration.getBodyMembers());
-          result.addAll(classChildrenNames);
-        }
-        result.add(classDeclaration.getComponentName());
-      }
-
-      if (child instanceof MonkeyEnumDeclaration) {
-        MonkeyEnumDeclaration enumDeclaration = (MonkeyEnumDeclaration) child;
-        List<MonkeyEnumConstant> enumConstantList = enumDeclaration.getEnumConstantList();
-        for (MonkeyEnumConstant monkeyEnumConstant : enumConstantList) {
-          result.add(monkeyEnumConstant.getComponentName());
-        }
-      }
-      if (child instanceof MonkeyFieldDeclarationList) {
-        MonkeyFieldDeclarationList monkeyFieldDeclarationList = (MonkeyFieldDeclarationList) child;
-        for (MonkeyFieldDeclaration fieldDeclaration : monkeyFieldDeclarationList.getFieldDeclarationList()) {
-          result.add(fieldDeclaration.getComponentName());
-        }
-      }
-
-      if (child instanceof MonkeyFormalParameterDeclarations) {
-        MonkeyFormalParameterDeclarations monkeyFormalParameterDeclarations = (MonkeyFormalParameterDeclarations) child;
-        for (MonkeyComponentName monkeyComponentName : monkeyFormalParameterDeclarations.getComponentNameList()) {
-          result.add(monkeyComponentName);
-        }
-      }
-
-      // TODO: there must be some other way...
-      if (child instanceof MonkeyBlock) {
-        MonkeyBlock monkeyBlock = (MonkeyBlock) child;
-        List<MonkeyBlockStatement> blockStatementList = monkeyBlock.getBlockStatementList();
-        for (MonkeyBlockStatement monkeyBlockStatement : blockStatementList) {
-          MonkeyVariableDeclarationList variableDeclarationList = monkeyBlockStatement.getVariableDeclarationList();
-          if (variableDeclarationList != null) {
-            for (MonkeyVariableDeclaration monkeyVariableDeclaration : variableDeclarationList.getVariableDeclarationList()) {
-              result.add((monkeyVariableDeclaration).getComponentName());
+    companion object {
+        fun processDeclarationsImpl(
+            context: PsiElement?,
+            processor: PsiScopeProcessor,
+            state: ResolveState?
+        ): Boolean {
+            if (context == null) {
+                return true
             }
-          }
+            for (element in getDeclarationElementToProcess(context)) {
+                if (!processor.execute(element!!, state!!)) {
+                    return false
+                }
+            }
+            return true
         }
-      }
 
-      if (child instanceof MonkeyComponent) {
-        MonkeyComponent monkeyComponent = (MonkeyComponent) child;
-        result.add(monkeyComponent.getComponentName());
-      }
+        private fun getDeclarationElementToProcess(context: PsiElement): Set<MonkeyComponentName?> {
+            val result: MutableSet<MonkeyComponentName?> = THashSet()
+            for (child in context.children) {
+                if (child is MonkeyUsingDeclaration) {
+                    result.add(child.getComponentName())
+                }
+                if (child is MonkeyModuleDeclaration) {
+                    val moduleBodyMembers = child.getModuleBody()!!.getModuleBodyMembers()
+                    if (moduleBodyMembers != null) {
+                        val moduleChildrenNames =
+                            getDeclarationElementToProcess(moduleBodyMembers) // moduleBodyMembers.getChildren() will contain stuff
+                        result.addAll(moduleChildrenNames)
+                    }
+                    result.add(child.getComponentName())
+                }
+                if (child is MonkeyClassDeclaration) {
+                    if (child.getBodyMembers() != null) {
+                        val classChildrenNames = getDeclarationElementToProcess(
+                            child.getBodyMembers()!!
+                        )
+                        result.addAll(classChildrenNames)
+                    }
+                    result.add(child.getComponentName())
+                }
+                if (child is MonkeyEnumDeclaration) {
+                    val enumConstantList = child.getEnumConstantList()
+                    for (monkeyEnumConstant in enumConstantList) {
+                        result.add(monkeyEnumConstant.getComponentName())
+                    }
+                }
+                if (child is MonkeyFieldDeclarationList) {
+                    for (fieldDeclaration in child.getFieldDeclarationList()) {
+                        result.add(fieldDeclaration.getComponentName())
+                    }
+                }
+                if (child is MonkeyFormalParameterDeclarations) {
+                    for (monkeyComponentName in child.getComponentNameList()) {
+                        result.add(monkeyComponentName)
+                    }
+                }
+
+                // TODO: there must be some other way...
+                if (child is MonkeyBlock) {
+                    val blockStatementList = child.getBlockStatementList()
+                    for (monkeyBlockStatement in blockStatementList) {
+                        val variableDeclarationList = monkeyBlockStatement.getVariableDeclarationList()
+                        if (variableDeclarationList != null) {
+                            for (monkeyVariableDeclaration in variableDeclarationList.getVariableDeclarationList()) {
+                                result.add(monkeyVariableDeclaration.getComponentName())
+                            }
+                        }
+                    }
+                }
+                if (child is MonkeyComponent) {
+                    result.add(child.getComponentName())
+                }
+            }
+            return result
+        }
     }
-    return result;
-  }
 }

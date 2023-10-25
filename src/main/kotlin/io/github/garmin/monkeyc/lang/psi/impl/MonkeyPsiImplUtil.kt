@@ -1,6 +1,3 @@
-package io.github.garmin.monkeyc.lang.psi.impl;
+package io.github.garmin.monkeyc.lang.psi.impl
 
-
-public class MonkeyPsiImplUtil {
-
-}
+class MonkeyPsiImplUtil

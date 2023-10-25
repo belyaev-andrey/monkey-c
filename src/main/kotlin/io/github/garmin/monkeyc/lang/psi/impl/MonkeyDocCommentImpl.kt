@@ -1,30 +1,20 @@
-package io.github.garmin.monkeyc.lang.psi.impl;
+package io.github.garmin.monkeyc.lang.psi.impl
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import io.github.garmin.monkeyc.lang.psi.MonkeyDocComment;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.extapi.psi.ASTWrapperPsiElement
+import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiElement
+import com.intellij.psi.tree.IElementType
+import io.github.garmin.monkeyc.lang.psi.MonkeyDocComment
 
-public class MonkeyDocCommentImpl extends ASTWrapperPsiElement implements MonkeyDocComment {
+class MonkeyDocCommentImpl(node: ASTNode) : ASTWrapperPsiElement(node), MonkeyDocComment {
+    override fun getOwner(): PsiElement? {
+        val parent = parent
 
-  public MonkeyDocCommentImpl(@NotNull ASTNode node) {
-    super(node);
-  }
+        // TODO: implement
+        return null
+    }
 
-  @Nullable
-  @Override
-  public PsiElement getOwner() {
-    final PsiElement parent = getParent();
-
-    // TODO: implement
-    return null;
-  }
-
-  @Override
-  public IElementType getTokenType() {
-    return getNode().getElementType();
-  }
+    override fun getTokenType(): IElementType {
+        return node.elementType
+    }
 }

@@ -11,14 +11,13 @@ import javax.swing.Icon
 abstract class AbstractMonkeyComponentImpl(node: ASTNode) : MonkeyPsiCompositeElementImpl(node), MonkeyComponent {
 
     override fun getName(): String? {
-        val name: MonkeyComponentName = getComponentName()
-        return name.text
+        val name = getComponentName()
+        return name?.text ?: super.getName()
     }
 
     @Throws(IncorrectOperationException::class)
     override fun setName(name: String): PsiElement {
-        val componentName: MonkeyComponentName = getComponentName()
-        componentName.setName(name)
+        getComponentName()?.setName(name)
         return this
     }
 
@@ -43,7 +42,7 @@ abstract class AbstractMonkeyComponentImpl(node: ASTNode) : MonkeyPsiCompositeEl
     }
 
     override fun getTextOffset(): Int {
-        val name: MonkeyComponentName = getComponentName()
-        return name.textOffset
+        val name = getComponentName()
+        return name?.textOffset ?: super.getTextOffset()
     }
 }
