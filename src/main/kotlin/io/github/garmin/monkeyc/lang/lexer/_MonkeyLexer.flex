@@ -47,6 +47,7 @@ CHARLITERAL='[^']*'
   "?"                             { return QUES; }
   ":"                             { return COLON; }
   "class"                         { return CLASS; }
+  "interface"                     { return INTERFACE; }
   "function"                      { return FUNCTION; }
   "return"                        { return RETURN; }
   "new"                           { return NEW; }

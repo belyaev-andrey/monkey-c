@@ -22,6 +22,7 @@
     QUES = "?"
     COLON = ":"
     CLASS = "class"
+    INTERFACE = "interface"
     FUNCTION = "function"
     RETURN = "return"
     NEW = "new"
@@ -189,6 +190,14 @@ classBodyMembers ::= classBodyMember* {implements="io.github.garmin.monkeyc.lang
 
 private classBodyMember ::= constDeclaration | fieldDeclarationList | functionDeclaration | classDeclaration | enumDeclaration
 
+// interface
+interfaceDeclaration ::= INTERFACE interfaceBody
+
+interfaceBody ::= LBRACE interfaceBodyMembers RBRACE {pin=1}
+interfaceBodyMembers ::= interfaceBodyMember* {implements="io.github.garmin.monkeyc.lang.psi.MonkeyExecutionScope"}
+
+private interfaceBodyMember ::= fieldDeclarationList | functionDeclaration
+
 // Enums must be declared at the module or class level; they cannot be declared within a function.
 enumDeclaration ::= modifiers ENUM LBRACE enumConstant (COMMA enumConstant)* RBRACE
 
@@ -235,12 +244,14 @@ mixin="io.github.garmin.monkeyc.lang.psi.impl.AbstractMonkeyComponentImpl"
 implements="io.github.garmin.monkeyc.lang.psi.MonkeyComponent"
 }
 
-typeDefinition ::= TYPEDEF componentName asTypeClause? SEMI {pin=2}
+//Typedef
+typeDefinition ::= TYPEDEF componentName asTypeClause? SEMI
 
 private typeReference ::= qualifiedName QUES?
 
-asTypeClause ::= AS typeReference (OR typeReference)*
+asTypeClause ::= AS ((typeReference (OR typeReference)*) | interfaceDeclaration)
 
+//Initializers
 variableInitializer ::= (arrayInitializer | expression) asTypeClause?
 
 arrayInitializer ::= LBRACE (variableInitializer (COMMA variableInitializer)*)? COMMA? RBRACE

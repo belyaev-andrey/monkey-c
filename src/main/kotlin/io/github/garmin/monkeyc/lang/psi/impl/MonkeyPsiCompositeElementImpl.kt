@@ -10,7 +10,7 @@ import gnu.trove.THashSet
 import io.github.garmin.monkeyc.lang.psi.*
 
 open class MonkeyPsiCompositeElementImpl(node: ASTNode) : ASTWrapperPsiElement(node), MonkeyPsiCompositeElement {
-    val tokenType: IElementType
+    private val tokenType: IElementType
         get() = node.elementType
 
     override fun toString(): String {
@@ -81,14 +81,9 @@ open class MonkeyPsiCompositeElementImpl(node: ASTNode) : ASTWrapperPsiElement(n
                         }
                     }
 
-                    is MonkeyAsTypeClause -> {
-                        //TODO
-                    }
-
                     is MonkeyTypeDefinition -> {
                         result.add(child.componentName)
                     }
-
 
                     is MonkeyFieldDeclarationList -> {
                         for (fieldDeclaration in child.getFieldDeclarationList()) {

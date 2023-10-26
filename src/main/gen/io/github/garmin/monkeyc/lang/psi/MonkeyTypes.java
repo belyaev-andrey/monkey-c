@@ -52,6 +52,9 @@ public interface MonkeyTypes {
   IElementType IMPORT_DECLARATION = new MonkeyElementType("IMPORT_DECLARATION");
   IElementType INCLUSIVE_OR_EXPRESSION = new MonkeyElementType("INCLUSIVE_OR_EXPRESSION");
   IElementType INSTANCE_OF_EXPRESSION = new MonkeyElementType("INSTANCE_OF_EXPRESSION");
+  IElementType INTERFACE_BODY = new MonkeyElementType("INTERFACE_BODY");
+  IElementType INTERFACE_BODY_MEMBERS = new MonkeyElementType("INTERFACE_BODY_MEMBERS");
+  IElementType INTERFACE_DECLARATION = new MonkeyElementType("INTERFACE_DECLARATION");
   IElementType KEY_VALUE_INITIALIZER = new MonkeyElementType("KEY_VALUE_INITIALIZER");
   IElementType LITERAL = new MonkeyElementType("LITERAL");
   IElementType MODIFIERS = new MonkeyElementType("MODIFIERS");
@@ -128,6 +131,7 @@ public interface MonkeyTypes {
   IElementType IF = new MonkeyTokenType("if");
   IElementType IMPORT = new MonkeyTokenType("import");
   IElementType INSTANCEOF = new MonkeyTokenType("instanceof");
+  IElementType INTERFACE = new MonkeyTokenType("interface");
   IElementType INTLITERAL = new MonkeyTokenType("INTLITERAL");
   IElementType LBRACE = new MonkeyTokenType("{");
   IElementType LBRACKET = new MonkeyTokenType("[");
@@ -313,6 +317,15 @@ public interface MonkeyTypes {
       }
       else if (type == INSTANCE_OF_EXPRESSION) {
         return new MonkeyInstanceOfExpressionImpl(node);
+      }
+      else if (type == INTERFACE_BODY) {
+        return new MonkeyInterfaceBodyImpl(node);
+      }
+      else if (type == INTERFACE_BODY_MEMBERS) {
+        return new MonkeyInterfaceBodyMembersImpl(node);
+      }
+      else if (type == INTERFACE_DECLARATION) {
+        return new MonkeyInterfaceDeclarationImpl(node);
       }
       else if (type == KEY_VALUE_INITIALIZER) {
         return new MonkeyKeyValueInitializerImpl(node);

@@ -5,12 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface MonkeyAsTypeClause extends MonkeyPsiCompositeElement {
-
-  @Nullable
-  MonkeyInterfaceDeclaration getInterfaceDeclaration();
+public interface MonkeyInterfaceBodyMembers extends MonkeyExecutionScope {
 
   @NotNull
-  List<MonkeyQualifiedName> getQualifiedNameList();
+  List<MonkeyFieldDeclarationList> getFieldDeclarationListList();
+
+  @NotNull
+  List<MonkeyFunctionDeclaration> getFunctionDeclarationList();
 
 }

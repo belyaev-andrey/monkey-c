@@ -183,6 +183,18 @@ public class MonkeyVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitInterfaceBody(@NotNull MonkeyInterfaceBody o) {
+    visitPsiCompositeElement(o);
+  }
+
+  public void visitInterfaceBodyMembers(@NotNull MonkeyInterfaceBodyMembers o) {
+    visitExecutionScope(o);
+  }
+
+  public void visitInterfaceDeclaration(@NotNull MonkeyInterfaceDeclaration o) {
+    visitPsiCompositeElement(o);
+  }
+
   public void visitKeyValueInitializer(@NotNull MonkeyKeyValueInitializer o) {
     visitPsiCompositeElement(o);
   }

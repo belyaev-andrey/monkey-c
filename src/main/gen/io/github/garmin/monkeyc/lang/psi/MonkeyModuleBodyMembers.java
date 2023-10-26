@@ -25,4 +25,7 @@ public interface MonkeyModuleBodyMembers extends MonkeyExecutionScope {
   @NotNull
   List<MonkeyModuleDeclaration> getModuleDeclarationList();
 
+  @NotNull
+  List<MonkeyTypeDefinition> getTypeDefinitionList();
+
 }

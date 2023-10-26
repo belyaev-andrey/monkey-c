@@ -10,14 +10,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static io.github.garmin.monkeyc.lang.psi.MonkeyTypes.*;
 import io.github.garmin.monkeyc.lang.psi.*;
 
-public class MonkeyAsTypeClauseImpl extends MonkeyPsiCompositeElementImpl implements MonkeyAsTypeClause {
+public class MonkeyInterfaceDeclarationImpl extends MonkeyPsiCompositeElementImpl implements MonkeyInterfaceDeclaration {
 
-  public MonkeyAsTypeClauseImpl(@NotNull ASTNode node) {
+  public MonkeyInterfaceDeclarationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull MonkeyVisitor visitor) {
-    visitor.visitAsTypeClause(this);
+    visitor.visitInterfaceDeclaration(this);
   }
 
   @Override
@@ -27,15 +27,9 @@ public class MonkeyAsTypeClauseImpl extends MonkeyPsiCompositeElementImpl implem
   }
 
   @Override
-  @Nullable
-  public MonkeyInterfaceDeclaration getInterfaceDeclaration() {
-    return findChildByClass(MonkeyInterfaceDeclaration.class);
-  }
-
-  @Override
   @NotNull
-  public List<MonkeyQualifiedName> getQualifiedNameList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, MonkeyQualifiedName.class);
+  public MonkeyInterfaceBody getInterfaceBody() {
+    return findNotNullChildByClass(MonkeyInterfaceBody.class);
   }
 
 }

@@ -344,33 +344,54 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // AS typeReference (OR typeReference)*
+  // AS ((typeReference (OR typeReference)*) | interfaceDeclaration)
   public static boolean asTypeClause(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "asTypeClause")) return false;
     if (!nextTokenIs(b, AS)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, AS);
-    r = r && typeReference(b, l + 1);
-    r = r && asTypeClause_2(b, l + 1);
+    r = r && asTypeClause_1(b, l + 1);
     exit_section_(b, m, AS_TYPE_CLAUSE, r);
     return r;
   }
 
+  // (typeReference (OR typeReference)*) | interfaceDeclaration
+  private static boolean asTypeClause_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "asTypeClause_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = asTypeClause_1_0(b, l + 1);
+    if (!r) r = interfaceDeclaration(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // typeReference (OR typeReference)*
+  private static boolean asTypeClause_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "asTypeClause_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = typeReference(b, l + 1);
+    r = r && asTypeClause_1_0_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
   // (OR typeReference)*
-  private static boolean asTypeClause_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "asTypeClause_2")) return false;
+  private static boolean asTypeClause_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "asTypeClause_1_0_1")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!asTypeClause_2_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "asTypeClause_2", c)) break;
+      if (!asTypeClause_1_0_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "asTypeClause_1_0_1", c)) break;
     }
     return true;
   }
 
   // OR typeReference
-  private static boolean asTypeClause_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "asTypeClause_2_0")) return false;
+  private static boolean asTypeClause_1_0_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "asTypeClause_1_0_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, OR);
@@ -1561,6 +1582,58 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // LBRACE interfaceBodyMembers RBRACE
+  public static boolean interfaceBody(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "interfaceBody")) return false;
+    if (!nextTokenIs(b, LBRACE)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, INTERFACE_BODY, null);
+    r = consumeToken(b, LBRACE);
+    p = r; // pin = 1
+    r = r && report_error_(b, interfaceBodyMembers(b, l + 1));
+    r = p && consumeToken(b, RBRACE) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
+  // fieldDeclarationList | functionDeclaration
+  static boolean interfaceBodyMember(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "interfaceBodyMember")) return false;
+    boolean r;
+    r = fieldDeclarationList(b, l + 1);
+    if (!r) r = functionDeclaration(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // interfaceBodyMember*
+  public static boolean interfaceBodyMembers(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "interfaceBodyMembers")) return false;
+    Marker m = enter_section_(b, l, _NONE_, INTERFACE_BODY_MEMBERS, "<interface body members>");
+    while (true) {
+      int c = current_position_(b);
+      if (!interfaceBodyMember(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "interfaceBodyMembers", c)) break;
+    }
+    exit_section_(b, l, m, true, false, null);
+    return true;
+  }
+
+  /* ********************************************************** */
+  // INTERFACE interfaceBody
+  public static boolean interfaceDeclaration(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "interfaceDeclaration")) return false;
+    if (!nextTokenIs(b, INTERFACE)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, INTERFACE);
+    r = r && interfaceBody(b, l + 1);
+    exit_section_(b, m, INTERFACE_DECLARATION, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // primary EQGT expression
   public static boolean keyValueInitializer(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "keyValueInitializer")) return false;
@@ -1680,7 +1753,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // constDeclaration | fieldDeclarationList | functionDeclaration | classDeclaration | enumDeclaration | moduleDeclaration
+  // constDeclaration | fieldDeclarationList | functionDeclaration | classDeclaration | enumDeclaration | moduleDeclaration | typeDefinition
   static boolean moduleBodyMember(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "moduleBodyMember")) return false;
     boolean r;
@@ -1690,6 +1763,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     if (!r) r = classDeclaration(b, l + 1);
     if (!r) r = enumDeclaration(b, l + 1);
     if (!r) r = moduleDeclaration(b, l + 1);
+    if (!r) r = typeDefinition(b, l + 1);
     return r;
   }
 
@@ -2462,15 +2536,14 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   public static boolean typeDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "typeDefinition")) return false;
     if (!nextTokenIs(b, TYPEDEF)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, TYPE_DEFINITION, null);
+    boolean r;
+    Marker m = enter_section_(b);
     r = consumeToken(b, TYPEDEF);
     r = r && componentName(b, l + 1);
-    p = r; // pin = 2
-    r = r && report_error_(b, typeDefinition_2(b, l + 1));
-    r = p && consumeToken(b, SEMI) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    r = r && typeDefinition_2(b, l + 1);
+    r = r && consumeToken(b, SEMI);
+    exit_section_(b, m, TYPE_DEFINITION, r);
+    return r;
   }
 
   // asTypeClause?
