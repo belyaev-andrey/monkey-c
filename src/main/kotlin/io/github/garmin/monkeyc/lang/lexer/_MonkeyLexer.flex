@@ -59,6 +59,8 @@ CHARLITERAL='[^']*'
   "typedef"                       { return TYPEDEF; }
   "as"                            { return AS; }
   "enum"                          { return ENUM; }
+  "Array"                         { return ARRAY; }
+  "Dictionary"                    { return DICTIONARY; }
   "extends"                       { return EXTENDS; }
   "null"                          { return NULL; }
   "native"                        { return NATIVE; }

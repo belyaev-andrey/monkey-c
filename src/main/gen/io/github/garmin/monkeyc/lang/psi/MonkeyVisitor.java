@@ -103,6 +103,10 @@ public class MonkeyVisitor extends PsiElementVisitor {
     visitComponent(o);
   }
 
+  public void visitContainerDef(@NotNull MonkeyContainerDef o) {
+    visitPsiCompositeElement(o);
+  }
+
   public void visitCreator(@NotNull MonkeyCreator o) {
     visitPsiCompositeElement(o);
   }

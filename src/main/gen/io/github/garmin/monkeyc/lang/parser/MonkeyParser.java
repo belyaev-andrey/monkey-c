@@ -203,6 +203,38 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // ARRAY (LT polyType GT)?
+  static boolean arrayContainer(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "arrayContainer")) return false;
+    if (!nextTokenIs(b, ARRAY)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, ARRAY);
+    r = r && arrayContainer_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (LT polyType GT)?
+  private static boolean arrayContainer_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "arrayContainer_1")) return false;
+    arrayContainer_1_0(b, l + 1);
+    return true;
+  }
+
+  // LT polyType GT
+  private static boolean arrayContainer_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "arrayContainer_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, LT);
+    r = r && polyType(b, l + 1);
+    r = r && consumeToken(b, GT);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // NEW LBRACKET expression RBRACKET // new [expression evaluating to integer]
   //                | LBRACKET (expression (COMMA expression)* )? RBRACKET // [expression1, expression2, ...]
   //                | dictionaryCreator
@@ -344,7 +376,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // AS ((typeReference (OR typeReference)*) | interfaceDeclaration)
+  // AS (polyType | interfaceDeclaration)
   public static boolean asTypeClause(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "asTypeClause")) return false;
     if (!nextTokenIs(b, AS)) return false;
@@ -356,47 +388,12 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (typeReference (OR typeReference)*) | interfaceDeclaration
+  // polyType | interfaceDeclaration
   private static boolean asTypeClause_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "asTypeClause_1")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = asTypeClause_1_0(b, l + 1);
+    r = polyType(b, l + 1);
     if (!r) r = interfaceDeclaration(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // typeReference (OR typeReference)*
-  private static boolean asTypeClause_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "asTypeClause_1_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = typeReference(b, l + 1);
-    r = r && asTypeClause_1_0_1(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // (OR typeReference)*
-  private static boolean asTypeClause_1_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "asTypeClause_1_0_1")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!asTypeClause_1_0_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "asTypeClause_1_0_1", c)) break;
-    }
-    return true;
-  }
-
-  // OR typeReference
-  private static boolean asTypeClause_1_0_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "asTypeClause_1_0_1_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, OR);
-    r = r && typeReference(b, l + 1);
-    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -887,6 +884,19 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // arrayContainer | dictionaryContainer
+  public static boolean containerDef(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "containerDef")) return false;
+    if (!nextTokenIs(b, "<container def>", ARRAY, DICTIONARY)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, CONTAINER_DEF, "<container def>");
+    r = arrayContainer(b, l + 1);
+    if (!r) r = dictionaryContainer(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // objectCreator | arrayCreator
   public static boolean creator(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "creator")) return false;
@@ -895,6 +905,40 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     r = objectCreator(b, l + 1);
     if (!r) r = arrayCreator(b, l + 1);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // DICTIONARY (LT typeReference COMMA typeReference GT)?
+  static boolean dictionaryContainer(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dictionaryContainer")) return false;
+    if (!nextTokenIs(b, DICTIONARY)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, DICTIONARY);
+    r = r && dictionaryContainer_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (LT typeReference COMMA typeReference GT)?
+  private static boolean dictionaryContainer_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dictionaryContainer_1")) return false;
+    dictionaryContainer_1_0(b, l + 1);
+    return true;
+  }
+
+  // LT typeReference COMMA typeReference GT
+  private static boolean dictionaryContainer_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dictionaryContainer_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, LT);
+    r = r && typeReference(b, l + 1);
+    r = r && consumeToken(b, COMMA);
+    r = r && typeReference(b, l + 1);
+    r = r && consumeToken(b, GT);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -1921,6 +1965,40 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // typeReference (OR typeReference)*
+  static boolean polyType(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "polyType")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = typeReference(b, l + 1);
+    r = r && polyType_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (OR typeReference)*
+  private static boolean polyType_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "polyType_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!polyType_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "polyType_1", c)) break;
+    }
+    return true;
+  }
+
+  // OR typeReference
+  private static boolean polyType_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "polyType_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, OR);
+    r = r && typeReference(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // parExpression
   //                   | fullyQualifiedReferenceExpression identifierSuffix?
   //                   | literal
@@ -2554,21 +2632,31 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // qualifiedName QUES?
+  // qualifiedName | containerDef QUES?
   static boolean typeReference(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "typeReference")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = qualifiedName(b, l + 1);
-    r = r && typeReference_1(b, l + 1);
+    if (!r) r = typeReference_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // containerDef QUES?
+  private static boolean typeReference_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeReference_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = containerDef(b, l + 1);
+    r = r && typeReference_1_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // QUES?
-  private static boolean typeReference_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "typeReference_1")) return false;
+  private static boolean typeReference_1_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeReference_1_1")) return false;
     consumeToken(b, QUES);
     return true;
   }

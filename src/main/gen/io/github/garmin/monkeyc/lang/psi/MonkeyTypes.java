@@ -32,6 +32,7 @@ public interface MonkeyTypes {
   IElementType CONDITIONAL_EXPRESSION = new MonkeyElementType("CONDITIONAL_EXPRESSION");
   IElementType CONDITIONAL_OR_EXPRESSION = new MonkeyElementType("CONDITIONAL_OR_EXPRESSION");
   IElementType CONST_DECLARATION = new MonkeyElementType("CONST_DECLARATION");
+  IElementType CONTAINER_DEF = new MonkeyElementType("CONTAINER_DEF");
   IElementType CREATOR = new MonkeyElementType("CREATOR");
   IElementType DICTIONARY_CREATOR = new MonkeyElementType("DICTIONARY_CREATOR");
   IElementType ENUM_CONSTANT = new MonkeyElementType("ENUM_CONSTANT");
@@ -89,6 +90,7 @@ public interface MonkeyTypes {
   IElementType AMPAMP = new MonkeyTokenType("&&");
   IElementType AMPEQ = new MonkeyTokenType("&=");
   IElementType AND = new MonkeyTokenType("and");
+  IElementType ARRAY = new MonkeyTokenType("Array");
   IElementType AS = new MonkeyTokenType("as");
   IElementType BANG = new MonkeyTokenType("!");
   IElementType BANGEQ = new MonkeyTokenType("!=");
@@ -109,6 +111,7 @@ public interface MonkeyTypes {
   IElementType CONST = new MonkeyTokenType("const");
   IElementType CONTINUE = new MonkeyTokenType("continue");
   IElementType DEFAULT = new MonkeyTokenType("default");
+  IElementType DICTIONARY = new MonkeyTokenType("Dictionary");
   IElementType DO = new MonkeyTokenType("do");
   IElementType DOT = new MonkeyTokenType(".");
   IElementType DOUBLELITERAL = new MonkeyTokenType("DOUBLELITERAL");
@@ -257,6 +260,9 @@ public interface MonkeyTypes {
       }
       else if (type == CONST_DECLARATION) {
         return new MonkeyConstDeclarationImpl(node);
+      }
+      else if (type == CONTAINER_DEF) {
+        return new MonkeyContainerDefImpl(node);
       }
       else if (type == CREATOR) {
         return new MonkeyCreatorImpl(node);

@@ -34,6 +34,8 @@
     TYPEDEF = "typedef"
     AS = "as"
     ENUM = "enum"
+    ARRAY = "Array"
+    DICTIONARY = "Dictionary"
     EXTENDS = "extends"
     NULL = "null"
     NATIVE = "native"
@@ -247,9 +249,18 @@ implements="io.github.garmin.monkeyc.lang.psi.MonkeyComponent"
 //Typedef
 typeDefinition ::= TYPEDEF componentName asTypeClause? SEMI
 
-private typeReference ::= qualifiedName QUES?
+private typeReference ::= qualifiedName | containerDef QUES?
 
-asTypeClause ::= AS ((typeReference (OR typeReference)*) | interfaceDeclaration)
+asTypeClause ::= AS (polyType | interfaceDeclaration)
+
+private polyType ::= (typeReference (OR typeReference)*)
+
+//Containers definition
+containerDef ::= arrayContainer | dictionaryContainer
+
+private arrayContainer ::= ARRAY (LT polyType GT)?
+
+private dictionaryContainer ::= DICTIONARY (LT typeReference COMMA typeReference GT)?
 
 //Initializers
 variableInitializer ::= (arrayInitializer | expression) asTypeClause?
