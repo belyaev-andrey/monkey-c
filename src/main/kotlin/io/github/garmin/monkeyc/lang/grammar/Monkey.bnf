@@ -252,7 +252,7 @@ implements="io.github.garmin.monkeyc.lang.psi.MonkeyComponent"
 //Typedef
 typeDefinition ::= TYPEDEF componentName asTypeClause? SEMI
 
-private typeReference ::= qualifiedName | containerDef QUES?
+private typeReference ::= (qualifiedName | containerDef) QUES?
 
 asTypeClause ::= AS (polyType | interfaceDeclaration)
 

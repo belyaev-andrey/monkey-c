@@ -1,73 +1,58 @@
-package io.github.garmin.monkeyc.lang.resolve;
+package io.github.garmin.monkeyc.lang.resolve
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.indexing.FileBasedIndex;
-import io.github.garmin.monkeyc.lang.file.MonkeyFileType;
-import io.github.garmin.monkeyc.lang.psi.MonkeyComponentName;
-import io.github.garmin.monkeyc.lang.psi.MonkeyFile;
-import io.github.garmin.monkeyc.lang.psi.MonkeyReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiManager
+import com.intellij.psi.ResolveState
+import com.intellij.psi.impl.source.resolve.ResolveCache
+import com.intellij.psi.search.FileTypeIndex
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.util.indexing.FileBasedIndex
+import io.github.garmin.monkeyc.lang.file.MonkeyFileType
+import io.github.garmin.monkeyc.lang.psi.MonkeyComponentName
+import io.github.garmin.monkeyc.lang.psi.MonkeyFile
+import io.github.garmin.monkeyc.lang.psi.MonkeyReference
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-public class MonkeyResolver implements ResolveCache.AbstractResolver<MonkeyReference, List<? extends PsiElement>> {
-  public static final MonkeyResolver INSTANCE = new MonkeyResolver();
-
-  @Nullable
-  @Override
-  public List<? extends PsiElement> resolve(@NotNull MonkeyReference reference, boolean incompleteCode) {
-    // for some reason, aa.bb() reference for bb in param info, has canonical text ".bb" instead of bb
-    // finding the child gives the correct reference
-    MonkeyReference[] references = PsiTreeUtil.getChildrenOfType(reference, MonkeyReference.class);
-
-    if (references != null && references.length > 0) {
-      MonkeyReference reference1 = references[0];
-      return resolveSimpleReference(reference1, reference1.getCanonicalText());
-    } else {
-      return resolveSimpleReference(reference, reference.getCanonicalText());
-    }
-  }
-
-  @NotNull
-  public static List<? extends PsiElement> resolveSimpleReference(@NotNull final PsiElement scopeElement, @NotNull final String name) {
-    final List<MonkeyComponentName> result = new ArrayList<>();
-    // local
-    final MonkeyResolveProcessor resolveProcessor = new MonkeyResolveProcessor(result, name);
-    PsiTreeUtil.treeWalkUp(resolveProcessor, scopeElement, null, ResolveState.initial());
-
-    // global
-    if (result.isEmpty()) {
-      //GlobalSearchScope resolveScope = scopeElement.getResolveScope();
-
-      Project project = scopeElement.getProject();
-      GlobalSearchScope filter1 = GlobalSearchScope.allScope(project);
-      Collection<VirtualFile> sourceFiles = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, MonkeyFileType.INSTANCE, filter1);
-
-      for (VirtualFile sourceFile : sourceFiles) {
-        MonkeyFile monkeyFile = (MonkeyFile) PsiManager.getInstance(project).findFile(sourceFile);
-        if (monkeyFile != null) {
-          final MonkeyResolveProcessor resolveProcessor2 = new MonkeyResolveProcessor(result, name);
-          PsiTreeUtil.treeWalkUp(resolveProcessor2, monkeyFile, null, ResolveState.initial());
+class MonkeyResolver : ResolveCache.AbstractResolver<MonkeyReference, List<PsiElement?>?> {
+    override fun resolve(reference: MonkeyReference, incompleteCode: Boolean): List<PsiElement?> {
+        // for some reason, aa.bb() reference for bb in param info, has canonical text ".bb" instead of bb
+        // finding the child gives the correct reference
+        val references = PsiTreeUtil.getChildrenOfType(reference, MonkeyReference::class.java)
+        return if (!references.isNullOrEmpty()) {
+            val reference1 = references[0]
+            resolveSimpleReference(reference1, reference1.canonicalText)
+        } else {
+            resolveSimpleReference(reference, reference.canonicalText)
         }
-      }
-
-
     }
 
-    // todo: add super, global, etc (check monkey c docs for order)
+    companion object {
+        val INSTANCE = MonkeyResolver()
+        fun resolveSimpleReference(scopeElement: PsiElement, name: String): List<PsiElement?> {
+            val result: MutableList<MonkeyComponentName> = ArrayList()
+            // local
+            val resolveProcessor = MonkeyResolveProcessor(result, name)
+            PsiTreeUtil.treeWalkUp(resolveProcessor, scopeElement, null, ResolveState.initial())
 
-    /*
+            // global
+            if (result.isEmpty()) {
+                //GlobalSearchScope resolveScope = scopeElement.getResolveScope();
+                val project = scopeElement.project
+                val filter1 = GlobalSearchScope.allScope(project)
+                val sourceFiles =
+                    FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, MonkeyFileType, filter1)
+                for (sourceFile in sourceFiles) {
+                    val monkeyFile = PsiManager.getInstance(project).findFile(sourceFile!!) as MonkeyFile?
+                    if (monkeyFile != null) {
+                        val resolveProcessor2 = MonkeyResolveProcessor(result, name)
+                        PsiTreeUtil.treeWalkUp(resolveProcessor2, monkeyFile, null, ResolveState.initial())
+                    }
+                }
+            }
+
+            // todo: add super, global, etc (check monkey c docs for order)
+
+            /*
     Scoping
     Monkey C is a message-passed language. When a function is called, the virtual machine does a look up operation
     at runtime to find the function being called. Here is the hierarchy that it will search:
@@ -79,11 +64,10 @@ public class MonkeyResolver implements ResolveCache.AbstractResolver<MonkeyRefer
     5. Members of the superclass’s parent module up to the global namespace
     */
 
-    // You can bring a module into your scoping level with the using keyword.
-    // using allows a module to be imported into another class or module by a symbol.
-    // using statements are scoped to the class or module in which they are defined.
-
-
-    return result;
-  }
+            // You can bring a module into your scoping level with the using keyword.
+            // using allows a module to be imported into another class or module by a symbol.
+            // using statements are scoped to the class or module in which they are defined.
+            return result
+        }
+    }
 }

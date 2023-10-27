@@ -2700,31 +2700,29 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // qualifiedName | containerDef QUES?
+  // (qualifiedName | containerDef) QUES?
   static boolean typeReference(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "typeReference")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = qualifiedName(b, l + 1);
-    if (!r) r = typeReference_1(b, l + 1);
+    r = typeReference_0(b, l + 1);
+    r = r && typeReference_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // containerDef QUES?
-  private static boolean typeReference_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "typeReference_1")) return false;
+  // qualifiedName | containerDef
+  private static boolean typeReference_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeReference_0")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = containerDef(b, l + 1);
-    r = r && typeReference_1_1(b, l + 1);
-    exit_section_(b, m, null, r);
+    r = qualifiedName(b, l + 1);
+    if (!r) r = containerDef(b, l + 1);
     return r;
   }
 
   // QUES?
-  private static boolean typeReference_1_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "typeReference_1_1")) return false;
+  private static boolean typeReference_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeReference_1")) return false;
     consumeToken(b, QUES);
     return true;
   }
