@@ -47,6 +47,9 @@ CHARLITERAL='[^']*'
   "?"                             { return QUES; }
   ":"                             { return COLON; }
   "class"                         { return CLASS; }
+  "private"                       { return PRIVATE; }
+  "protected"                     { return PROTECTED; }
+  "public"                        { return PUBLIC; }
   "interface"                     { return INTERFACE; }
   "function"                      { return FUNCTION; }
   "return"                        { return RETURN; }

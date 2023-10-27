@@ -22,6 +22,9 @@
     QUES = "?"
     COLON = ":"
     CLASS = "class"
+    PRIVATE = "private"
+    PROTECTED = "protected"
+    PUBLIC = "public"
     INTERFACE = "interface"
     FUNCTION = "function"
     RETURN = "return"
@@ -190,7 +193,7 @@ classDeclaration ::= modifiers CLASS componentName (EXTENDS fullyQualifiedRefere
 classBody ::= LBRACE classBodyMembers RBRACE {pin=1}
 classBodyMembers ::= classBodyMember* {implements="io.github.garmin.monkeyc.lang.psi.MonkeyExecutionScope"}
 
-private classBodyMember ::= constDeclaration | fieldDeclarationList | functionDeclaration | classDeclaration | enumDeclaration
+private classBodyMember ::= constDeclaration | memberModifiers? (fieldDeclarationList | functionDeclaration) | classDeclaration | enumDeclaration
 
 // interface
 interfaceDeclaration ::= INTERFACE interfaceBody
@@ -434,6 +437,8 @@ private argumentsList_recover ::= !(RPAREN)
 
 // hidden is the same as "protected" in Java -  it says that a variable or function is only accessible to a class or its subclasses:
 modifiers ::= annotation? STATIC? HIDDEN?
+
+memberModifiers ::= (PRIVATE | PROTECTED | PUBLIC)?
 
 annotation ::= LPAREN symbol RPAREN {pin=2}
 

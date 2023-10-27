@@ -207,6 +207,10 @@ public class MonkeyVisitor extends PsiElementVisitor {
     visitPsiCompositeElement(o);
   }
 
+  public void visitMemberModifiers(@NotNull MonkeyMemberModifiers o) {
+    visitPsiCompositeElement(o);
+  }
+
   public void visitModifiers(@NotNull MonkeyModifiers o) {
     visitPsiCompositeElement(o);
   }

@@ -633,15 +633,43 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // constDeclaration | fieldDeclarationList | functionDeclaration | classDeclaration | enumDeclaration
+  // constDeclaration | memberModifiers? (fieldDeclarationList | functionDeclaration) | classDeclaration | enumDeclaration
   static boolean classBodyMember(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "classBodyMember")) return false;
     boolean r;
+    Marker m = enter_section_(b);
     r = constDeclaration(b, l + 1);
-    if (!r) r = fieldDeclarationList(b, l + 1);
-    if (!r) r = functionDeclaration(b, l + 1);
+    if (!r) r = classBodyMember_1(b, l + 1);
     if (!r) r = classDeclaration(b, l + 1);
     if (!r) r = enumDeclaration(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // memberModifiers? (fieldDeclarationList | functionDeclaration)
+  private static boolean classBodyMember_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "classBodyMember_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = classBodyMember_1_0(b, l + 1);
+    r = r && classBodyMember_1_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // memberModifiers?
+  private static boolean classBodyMember_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "classBodyMember_1_0")) return false;
+    memberModifiers(b, l + 1);
+    return true;
+  }
+
+  // fieldDeclarationList | functionDeclaration
+  private static boolean classBodyMember_1_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "classBodyMember_1_1")) return false;
+    boolean r;
+    r = fieldDeclarationList(b, l + 1);
+    if (!r) r = functionDeclaration(b, l + 1);
     return r;
   }
 
@@ -1755,6 +1783,26 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     boolean r;
     r = consumeToken(b, PLUS);
     if (!r) r = consumeToken(b, SUB);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // (PRIVATE | PROTECTED | PUBLIC)?
+  public static boolean memberModifiers(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "memberModifiers")) return false;
+    Marker m = enter_section_(b, l, _NONE_, MEMBER_MODIFIERS, "<member modifiers>");
+    memberModifiers_0(b, l + 1);
+    exit_section_(b, l, m, true, false, null);
+    return true;
+  }
+
+  // PRIVATE | PROTECTED | PUBLIC
+  private static boolean memberModifiers_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "memberModifiers_0")) return false;
+    boolean r;
+    r = consumeToken(b, PRIVATE);
+    if (!r) r = consumeToken(b, PROTECTED);
+    if (!r) r = consumeToken(b, PUBLIC);
     return r;
   }
 

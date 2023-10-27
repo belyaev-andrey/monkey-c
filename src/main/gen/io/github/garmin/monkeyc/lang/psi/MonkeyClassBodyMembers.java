@@ -22,4 +22,7 @@ public interface MonkeyClassBodyMembers extends MonkeyExecutionScope {
   @NotNull
   List<MonkeyFunctionDeclaration> getFunctionDeclarationList();
 
+  @NotNull
+  List<MonkeyMemberModifiers> getMemberModifiersList();
+
 }

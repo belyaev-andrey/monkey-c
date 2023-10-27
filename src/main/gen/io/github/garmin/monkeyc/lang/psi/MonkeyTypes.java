@@ -58,6 +58,7 @@ public interface MonkeyTypes {
   IElementType INTERFACE_DECLARATION = new MonkeyElementType("INTERFACE_DECLARATION");
   IElementType KEY_VALUE_INITIALIZER = new MonkeyElementType("KEY_VALUE_INITIALIZER");
   IElementType LITERAL = new MonkeyElementType("LITERAL");
+  IElementType MEMBER_MODIFIERS = new MonkeyElementType("MEMBER_MODIFIERS");
   IElementType MODIFIERS = new MonkeyElementType("MODIFIERS");
   IElementType MODULE_BODY = new MonkeyElementType("MODULE_BODY");
   IElementType MODULE_BODY_MEMBERS = new MonkeyElementType("MODULE_BODY_MEMBERS");
@@ -153,6 +154,9 @@ public interface MonkeyTypes {
   IElementType PLUS = new MonkeyTokenType("+");
   IElementType PLUSEQ = new MonkeyTokenType("+=");
   IElementType PLUSPLUS = new MonkeyTokenType("++");
+  IElementType PRIVATE = new MonkeyTokenType("private");
+  IElementType PROTECTED = new MonkeyTokenType("protected");
+  IElementType PUBLIC = new MonkeyTokenType("public");
   IElementType QUES = new MonkeyTokenType("?");
   IElementType RBRACE = new MonkeyTokenType("}");
   IElementType RBRACKET = new MonkeyTokenType("]");
@@ -338,6 +342,9 @@ public interface MonkeyTypes {
       }
       else if (type == LITERAL) {
         return new MonkeyLiteralImpl(node);
+      }
+      else if (type == MEMBER_MODIFIERS) {
+        return new MonkeyMemberModifiersImpl(node);
       }
       else if (type == MODIFIERS) {
         return new MonkeyModifiersImpl(node);
