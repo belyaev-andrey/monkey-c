@@ -286,7 +286,7 @@ switchBlockStatementGroups ::= (switchBlockStatementGroup)*
 
 switchBlockStatementGroup ::= switchLabel (blockStatement)*
 
-switchLabel ::= CASE expression COLON | DEFAULT COLON
+switchLabel ::= CASE (expression | instanceOfStatement) COLON | DEFAULT COLON
 
 tryStatement ::= TRY block (catches FINALLY block | catches | FINALLY block)
 
@@ -294,7 +294,7 @@ catches ::= catchClause (catchClause)*
 
 catchClause ::= CATCH LPAREN catchParameter RPAREN block
 
-catchParameter ::= id (INSTANCEOF qualifiedName)?
+catchParameter ::= id (instanceOfStatement)?
 
 forStatement ::= FOR LPAREN forInit? SEMI expression? SEMI expressionList? RPAREN statement
 
@@ -336,7 +336,7 @@ assignmentOperator ::= EQ
                      | GT GT EQ
 
 // optional ternary operator in the end
-conditionalExpression ::= conditionalOrExpression (QUES expression COLON conditionalExpression)?
+conditionalExpression ::= (conditionalOrExpression (QUES expression COLON conditionalExpression)?)
 
 conditionalOrExpression ::= conditionalAndExpression ((BARBAR | OR) conditionalAndExpression)*
 
@@ -352,7 +352,9 @@ equalityExpression ::= hasExpression ((EQEQ | BANGEQ) hasExpression)*
 
 hasExpression ::= instanceOfExpression (HAS symbol)?
 
-instanceOfExpression ::= relationalExpression (INSTANCEOF qualifiedName)?
+instanceOfExpression ::= relationalExpression (instanceOfStatement)?
+
+private instanceOfStatement ::= INSTANCEOF qualifiedName
 
 relationalExpression ::= shiftExpression (relationalOp shiftExpression)*
 

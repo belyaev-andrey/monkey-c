@@ -554,7 +554,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // id (INSTANCEOF qualifiedName)?
+  // id (instanceOfStatement)?
   public static boolean catchParameter(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "catchParameter")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
@@ -566,20 +566,19 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (INSTANCEOF qualifiedName)?
+  // (instanceOfStatement)?
   private static boolean catchParameter_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "catchParameter_1")) return false;
     catchParameter_1_0(b, l + 1);
     return true;
   }
 
-  // INSTANCEOF qualifiedName
+  // (instanceOfStatement)
   private static boolean catchParameter_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "catchParameter_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, INSTANCEOF);
-    r = r && qualifiedName(b, l + 1);
+    r = instanceOfStatement(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -1596,7 +1595,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // relationalExpression (INSTANCEOF qualifiedName)?
+  // relationalExpression (instanceOfStatement)?
   public static boolean instanceOfExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "instanceOfExpression")) return false;
     boolean r;
@@ -1607,16 +1606,28 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (INSTANCEOF qualifiedName)?
+  // (instanceOfStatement)?
   private static boolean instanceOfExpression_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "instanceOfExpression_1")) return false;
     instanceOfExpression_1_0(b, l + 1);
     return true;
   }
 
-  // INSTANCEOF qualifiedName
+  // (instanceOfStatement)
   private static boolean instanceOfExpression_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "instanceOfExpression_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = instanceOfStatement(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // INSTANCEOF qualifiedName
+  static boolean instanceOfStatement(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "instanceOfStatement")) return false;
+    if (!nextTokenIs(b, INSTANCEOF)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSTANCEOF);
@@ -2509,7 +2520,7 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // CASE expression COLON | DEFAULT COLON
+  // CASE (expression | instanceOfStatement) COLON | DEFAULT COLON
   public static boolean switchLabel(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "switchLabel")) return false;
     if (!nextTokenIs(b, "<switch label>", CASE, DEFAULT)) return false;
@@ -2521,15 +2532,24 @@ public class MonkeyParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // CASE expression COLON
+  // CASE (expression | instanceOfStatement) COLON
   private static boolean switchLabel_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "switchLabel_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, CASE);
-    r = r && expression(b, l + 1);
+    r = r && switchLabel_0_1(b, l + 1);
     r = r && consumeToken(b, COLON);
     exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // expression | instanceOfStatement
+  private static boolean switchLabel_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "switchLabel_0_1")) return false;
+    boolean r;
+    r = expression(b, l + 1);
+    if (!r) r = instanceOfStatement(b, l + 1);
     return r;
   }
 

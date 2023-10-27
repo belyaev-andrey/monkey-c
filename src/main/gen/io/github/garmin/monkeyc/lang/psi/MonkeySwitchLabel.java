@@ -10,4 +10,7 @@ public interface MonkeySwitchLabel extends MonkeyPsiCompositeElement {
   @Nullable
   MonkeyExpression getExpression();
 
+  @Nullable
+  MonkeyQualifiedName getQualifiedName();
+
 }

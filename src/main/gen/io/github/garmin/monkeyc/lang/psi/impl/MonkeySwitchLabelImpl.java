@@ -32,4 +32,10 @@ public class MonkeySwitchLabelImpl extends MonkeyPsiCompositeElementImpl impleme
     return findChildByClass(MonkeyExpression.class);
   }
 
+  @Override
+  @Nullable
+  public MonkeyQualifiedName getQualifiedName() {
+    return findChildByClass(MonkeyQualifiedName.class);
+  }
+
 }
