@@ -49,6 +49,9 @@
         <lang.syntaxHighlighterFactory language="MonkeyC"
                                        implementationClass="io.github.garmin.monkeyc.lang.highlight.MonkeySyntaxHighlighterFactory"/>
 
+        <colorSettingsPage
+                implementation="io.github.garmin.monkeyc.ide.settings.MonkeyCColorSettingsPage"/>
+
     </extensions>
     <actions>
         <action id="io.github.garmin.monkeyc.ide.actions.CreateMonkeyFileAction"

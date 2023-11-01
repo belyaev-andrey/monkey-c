@@ -24,7 +24,7 @@ class MonkeySyntaxHighlighter: SyntaxHighlighterBase() {
 
     companion object {
 
-        private val MC_LINE_COMMENT =
+        val MC_LINE_COMMENT =
             TextAttributesKey.createTextAttributesKey("MC.LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
         private val MC_LINE_DOC_COMMENT =
             TextAttributesKey.createTextAttributesKey("MC.LINE_DOC_COMMENT", DefaultLanguageHighlighterColors.DOC_COMMENT)
@@ -36,7 +36,7 @@ class MonkeySyntaxHighlighter: SyntaxHighlighterBase() {
             "MC.FUNCTION_DECLARATION",
             DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
         )
-        private val MC_KEYWORD = TextAttributesKey.createTextAttributesKey("MC.KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
+        val MC_KEYWORD = TextAttributesKey.createTextAttributesKey("MC.KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
         private val MC_OPERATOR =
             TextAttributesKey.createTextAttributesKey("MC.OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN)
         private val MC_STRING = TextAttributesKey.createTextAttributesKey("MC.STRING", DefaultLanguageHighlighterColors.STRING)
