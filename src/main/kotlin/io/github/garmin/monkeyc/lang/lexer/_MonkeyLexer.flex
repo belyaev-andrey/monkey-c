@@ -26,8 +26,8 @@ EOL=\R
 WHITE_SPACE=\s+
 
 WHITE_SPACE=[ \t\n\x0B\f\r]+
-SINGLE_LINE_COMMENT="//"[^!].*
-SINGLE_LINE_DOC_COMMENT="//"\!(.*)
+SINGLE_LINE_COMMENT="//"[^!].*\n*
+SINGLE_LINE_DOC_COMMENT="//"(.*)\n*
 BLOCK_COMMENT="/"\*([^*]|\*+[^*/])*(\*+"/")?
 IDENTIFIER=[a-zA-Z$_][a-zA-Z0-9$_]*
 LONGLITERAL=[0-9]+[lL]

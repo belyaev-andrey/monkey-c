@@ -46,6 +46,9 @@
                                implementationClass="io.github.garmin.monkeyc.lang.parser.MonkeyParserDefinition"/>
 
 
+        <lang.syntaxHighlighterFactory language="MonkeyC"
+                                       implementationClass="io.github.garmin.monkeyc.lang.highlight.MonkeySyntaxHighlighterFactory"/>
+
     </extensions>
     <actions>
         <action id="io.github.garmin.monkeyc.ide.actions.CreateMonkeyFileAction"
