@@ -13,6 +13,27 @@ interface MonkeyTokenTypesSets {
             MonkeyTypes.BLOCK_COMMENT
         )
         val WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE)
+
+        val CONTAINERS = TokenSet.create(
+            MonkeyTypes.ARRAY,
+            MonkeyTypes.DICTIONARY
+        )
+
+        val OPERATOR_TOKENS = TokenSet.create(
+            MonkeyTypes.PLUS,
+            MonkeyTypes.SUB,
+            MonkeyTypes.STAR,
+            MonkeyTypes.SLASH
+        )
+
+        val NUMBER_LITERALS = TokenSet.create(
+            MonkeyTypes.INTLITERAL,
+            MonkeyTypes.LONGLITERAL,
+            MonkeyTypes.FLOATLITERAL,
+            MonkeyTypes.DOUBLELITERAL,
+            MonkeyTypes.HEX_LITERAL
+        )
+
         val BUILT_IN_IDENTIFIERS = TokenSet.create(
             MonkeyTypes.AND,
             MonkeyTypes.AS,

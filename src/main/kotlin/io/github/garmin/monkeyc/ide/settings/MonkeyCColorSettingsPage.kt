@@ -14,7 +14,8 @@ class MonkeyCColorSettingsPage: ColorSettingsPage {
 
     private val attributesDescriptors : Array<AttributesDescriptor> = arrayOf(
         AttributesDescriptor(MsgBundle.message("ide.settings.color.keyword"), MonkeySyntaxHighlighter.MC_KEYWORD),
-        AttributesDescriptor(MsgBundle.message("ide.settings.color.line.comment"), MonkeySyntaxHighlighter.MC_LINE_COMMENT)
+        AttributesDescriptor(MsgBundle.message("ide.settings.color.line.comment"), MonkeySyntaxHighlighter.MC_LINE_COMMENT),
+        AttributesDescriptor(MsgBundle.message("ide.settings.color.containers"), MonkeySyntaxHighlighter.MC_CONTAINER)
         //TODO add other categories
     )
 
@@ -42,6 +43,11 @@ class MonkeyCColorSettingsPage: ColorSettingsPage {
     override fun getDemoText(): String {
         //TODO improve text
         return """
+            // Create a typeless array
+            var untypedArray = new [size];
+            // Create a typed array
+            var typedArray = new Array<Number>[size];
+            
             class Circle
             {
                 protected var mRadius;
